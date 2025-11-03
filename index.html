@@ -1,94 +1,306 @@
-<!DOCTYPE html>
-<html lang="en" >
+<!doctype html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Vulnerability research & exploit development</title>
-  <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vulnerability research & exploit development</title>
 
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-  
+<style>
+/* ======= CSS ORIGINAL (integrado) ======= */
+body { color: #ccc; background: #111; font-family: sans-serif; }
+h1, h2 { margin: 0; }
+section { padding: 20px; }
+.hero { font-size: clamp(40px, 10vw, 100px); line-height: 1; display: inline-block; color: #fff; z-index: 2; letter-spacing: 10px; filter: drop-shadow(0 1px 3px); }
+.demo { height: 100px; background: #fff; }
+.layers { position: relative; }
+.layers::before, .layers::after { content: attr(data-text); position: absolute; width: 110%; z-index: -1; }
+.layers::before { top: 10px; left: 15px; color: #e0287d; }
+.layers::after { top: 5px; left: -10px; color: #1bc7fb; }
+.single-path { clip-path: polygon( 0% 12%, 53% 12%, 53% 26%, 25% 26%, 25% 86%, 31% 86%, 31% 0%, 53% 0%, 53% 84%, 92% 84%, 92% 82%, 70% 82%, 70% 29%, 78% 29%, 78% 65%, 69% 65%, 69% 66%, 77% 66%, 77% 45%, 85% 45%, 85% 26%, 97% 26%, 97% 28%, 84% 28%, 84% 34%, 54% 34%, 54% 89%, 30% 89%, 30% 58%, 83% 58%, 83% 5%, 68% 5%, 68% 36%, 62% 36%, 62% 1%, 12% 1%, 12% 34%, 60% 34%, 60% 57%, 98% 57%, 98% 83%, 1% 83%, 1% 53%, 91% 53%, 91% 84%, 8% 84%, 8% 83%, 4% 83% ); }
+.paths { animation: paths 5s step-end infinite; }
+@keyframes paths { 0% { clip-path: polygon( 0% 43%, 83% 43%, 83% 22%, 23% 22%, 23% 24%, 91% 24%, 91% 26%, 18% 26%, 18% 83%, 29% 83%, 29% 17%, 41% 17%, 41% 39%, 18% 39%, 18% 82%, 54% 82%, 54% 88%, 19% 88%, 19% 4%, 39% 4%, 39% 14%, 76% 14%, 76% 52%, 23% 52%, 23% 35%, 19% 35%, 19% 8%, 36% 8%, 36% 31%, 73% 31%, 73% 16%, 1% 16%, 1% 56%, 50% 56%, 50% 8% ); } 5% { clip-path: polygon( 0% 29%, 44% 29%, 44% 83%, 94% 83%, 94% 56%, 11% 56%, 11% 64%, 94% 64%, 94% 70%, 88% 70%, 88% 32%, 18% 32%, 18% 96%, 10% 96%, 10% 62%, 9% 62%, 9% 84%, 68% 84%, 68% 50%, 52% 50%, 52% 55%, 35% 55%, 35% 87%, 25% 87%, 25% 39%, 15% 39%, 15% 88%, 52% 88% ); } 30% { clip-path: polygon( 0% 53%, 93% 53%, 93% 62%, 68% 62%, 68% 37%, 97% 37%, 97% 89%, 13% 89%, 13% 45%, 51% 45%, 51% 88%, 17% 88%, 17% 54%, 81% 54%, 81% 75%, 79% 75%, 79% 76%, 38% 76%, 38% 28%, 61% 28%, 61% 12%, 55% 12%, 55% 62%, 68% 62%, 68% 51%, 0% 51%, 0% 92%, 63% 92%, 63% 4%, 65% 4% ); } 45% { clip-path: polygon( 0% 33%, 2% 33%, 2% 69%, 58% 69%, 58% 94%, 55% 94%, 55% 25%, 33% 25%, 33% 85%, 16% 85%, 16% 19%, 5% 19%, 5% 20%, 79% 20%, 79% 96%, 93% 96%, 93% 50%, 5% 50%, 5% 74%, 55% 74%, 55% 57%, 96% 57%, 96% 59%, 87% 59%, 87% 65%, 82% 65%, 82% 39%, 63% 39%, 63% 92%, 4% 92%, 4% 36%, 24% 36%, 24% 70%, 1% 70%, 1% 43%, 15% 43%, 15% 28%, 23% 28%, 23% 71%, 90% 71%, 90% 86%, 97% 86%, 97% 1%, 60% 1%, 60% 67%, 71% 67%, 71% 91%, 17% 91%, 17% 14%, 39% 14%, 39% 30%, 58% 30%, 58% 11%, 52% 11%, 52% 83%, 68% 83% ); } 76% { clip-path: polygon( 0% 26%, 15% 26%, 15% 73%, 72% 73%, 72% 70%, 77% 70%, 77% 75%, 8% 75%, 8% 42%, 4% 42%, 4% 61%, 17% 61%, 17% 12%, 26% 12%, 26% 63%, 73% 63%, 73% 43%, 90% 43%, 90% 67%, 50% 67%, 50% 41%, 42% 41%, 42% 46%, 50% 46%, 50% 84%, 96% 84%, 96% 78%, 49% 78%, 49% 25%, 63% 25%, 63% 14% ); } 90% { clip-path: polygon( 0% 41%, 13% 41%, 13% 6%, 87% 6%, 87% 93%, 10% 93%, 10% 13%, 89% 13%, 89% 6%, 3% 6%, 3% 8%, 16% 8%, 16% 79%, 0% 79%, 0% 99%, 92% 99%, 92% 90%, 5% 90%, 5% 60%, 0% 60%, 0% 48%, 89% 48%, 89% 13%, 80% 13%, 80% 43%, 95% 43%, 95% 19%, 80% 19%, 80% 85%, 38% 85%, 38% 62% ); } 1%, 7%, 33%, 47%, 78%, 93% { clip-path: none; } }
+.movement { position: relative; animation: movement 8s step-end infinite; }
+@keyframes movement { 0% { top: 0px; left: -20px; } 15% { top: 10px; left: 10px; } 60% { top: 5px; left: -10px; } 75% { top: -5px; left: 20px; } 100% { top: 10px; left: 5px; } }
+.opacity { animation: opacity 5s step-end infinite; }
+@keyframes opacity { 0% { opacity: 0.1; } 5% { opacity: 0.7; } 30% { opacity: 0.4; } 45% { opacity: 0.6; } 76% { opacity: 0.4; } 90% { opacity: 0.8; } 1%, 7%, 33%, 47%, 78%, 93% { opacity: 0; } }
+.font { animation: font 7s step-end infinite; }
+@keyframes font {
+  0% { font-weight: 100; color: #e0287d; filter: blur(3px); }
+  20% { font-weight: 500; color: #fff; filter: blur(0); }
+  50% { font-weight: 300; color: #1bc7fb; filter: blur(2px); }
+  60% { font-weight: 700; color: #fff; filter: blur(0); }
+  90% { font-weight: 500; color: #e0287d; filter: blur(6px); }
+}
+.glitch span { animation: paths 5s step-end infinite; }
+.glitch::before { animation: paths 5s step-end infinite, opacity 5s step-end infinite, font 8s step-end infinite, movement 10s step-end infinite; }
+.glitch::after  { animation: paths 5s step-end infinite, opacity 5s step-end infinite, font 7s step-end infinite,  movement 8s step-end infinite; }
+.hero-container { position: relative; padding: 200px 0; text-align: center; }
+.environment   { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.5; filter: blur(5px);
+  background: url(https://wallpapercave.com/wp/wp9958493.jpg) center no-repeat; background-size: cover; }
+
+/* ======= UI extra (grid, búsqueda, modal, toast) ======= */
+:root{
+  --ink:#e6eef8; --sub:#9bb0c9; --card:#1a1f2b; --muted:#121722; --border:#2a3344;
+  --pill:#0f1624; --pill-br:#233249; --pill-tx:#c9defa; --accent:#5eead4; --accent2:#60a5fa;
+  --danger:#ef4444; --overlay: rgba(0,0,0,.7);
+}
+main{max-width:1100px; margin:0 auto; padding:0 16px 48px;}
+header .quote, .hero-container + .quote{
+  margin-top:10px; color:#b7c6da; font-size:14px;
+  text-align:center; max-width:920px; margin-left:auto; margin-right:auto;
+}
+.section-title{font-weight:700; color:#eaf3ff; margin:8px 0 14px; font-size:15px; letter-spacing:.03em;}
+.searchbar{display:flex; align-items:center; gap:10px; margin:10px 0 18px; background:#0e1420; border:1px solid #243145; border-radius:12px; padding:10px 12px;}
+.searchbar input{background:transparent; border:none; outline:none; color:#d8e6fb; width:100%; font-size:14px;}
+.count{font-size:12px; color:#98a9c4}
+.grid{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+a.doc-card{display:block; text-decoration:none; color:inherit; background:linear-gradient(180deg,var(--card),var(--muted)); border:1px solid var(--border); border-radius:16px; padding:16px; position:relative; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; box-shadow:0 6px 20px rgba(10,18,30,.25), inset 0 0 0 1px rgba(255,255,255,.02);}
+a.doc-card:hover{ transform:translateY(-3px); border-color:#27426d; box-shadow:0 10px 28px rgba(10,18,30,.35) }
+.pill{display:inline-flex; align-items:center; gap:8px; background:var(--pill); color:var(--pill-tx); border:1px solid var(--pill-br); border-radius:999px; padding:6px 10px; font-size:12px; font-weight:600;}
+.dot{width:6px;height:6px;border-radius:50%; background:var(--accent)}
+a.doc-card h3{margin:10px 0 6px; font-size:18px; font-weight:700; color:#eaf3ff}
+a.doc-card p{margin:0; color:#a8bbd8; font-size:14px}
+.no-results{display:none; color:#b7c6da; margin-top:6px; font-size:14px}
+
+/* Modal */
+.modal-backdrop{position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; z-index:50;}
+.modal{width:min(92vw,420px); background:#0f1420; border:1px solid #2a3a52; border-radius:16px; padding:18px; box-shadow:0 18px 60px rgba(0,0,0,.5);}
+.modal h3{margin:0 0 8px; color:#eaf3ff; font-size:18px}
+.modal p{margin:0 0 12px; color:#b7c6da; font-size:14px}
+.modal .field{display:flex; gap:8px; align-items:center; background:#0a1020; border:1px solid #22314a; border-radius:12px; padding:10px 12px;}
+.modal input[type="password"]{flex:1; background:transparent; border:none; outline:none; color:#dbe7ff; font-size:14px; letter-spacing:.1em;
+/* enmascarado con círculos */
+-webkit-text-security: disc; text-security: disc;
+}
+.modal .actions{display:flex; gap:10px; justify-content:flex-end; margin-top:14px}
+.btn{cursor:pointer; user-select:none; border:1px solid #2a3a52; background:#152035; color:#dbe7ff; padding:8px 12px; border-radius:10px; font-size:14px}
+.btn.primary{border-color:#2563eb; background:#1f2f4f}
+.btn.danger{border-color:#7f1d1d; background:#3f0f0f}
+.modal .hint{font-size:12px; color:#8aa1c5; margin-top:6px}
+
+/* Toast */
+.toast{position:fixed; right:16px; top:16px; padding:10px 14px; border-radius:10px; color:#fff; background:var(--danger); border:1px solid #7f1d1d; box-shadow:0 10px 24px rgba(0,0,0,.35); display:none; z-index:60; font-size:14px}
+
+/* Responsive hero */
+@media (max-width:600px){
+  .hero-container{ padding:140px 0 160px }
+  .hero{ letter-spacing:6px }
+}
+</style>
 </head>
 
 <body>
-<section>
-  <div class="hero-container">
-    <div class="environment"></div>
-    <h2 class="hero glitch layers" data-text="h4ck3r"><span>h4ck3r</span></h2>
-  </div>
-  
-  <div>
-    <p style="color:white; text-align:center;">"We put the time in ...to know [that network] better than the people who designed it and the people who are securing it," - Rob Joyce, Chief, TAO, NSA</p>
-  </div>
-</section>
-  <section>
-    <table id="myTable" class="display" style="text-align:center;">
-       <thead>
-          <tr>
-             <th>Document</th>
-             <th>Category</th>
-          </tr>
-       </thead>
-       <tbody>
-          <tr>
-             <td><a href="documento1.pdf">Documento 1</a></td>
-             <td>Web</td>
-          </tr>
-          <tr>
-             <td><a href="documento2.pdf">Documento 2</a></td>
-             <td>Windows stack</td>
-          </tr>
-         <tr>
-             <td><a href="documento3.pdf">Documento 3</a></td>
-             <td>Linux stack</td>
-          </tr>
-         <tr>
-             <td><a href="documento4.pdf">Documento 4</a></td>
-             <td>Linux Heap</td>
-          </tr>
-          <tr>
-            <td><a href="documento1.pdf">Documento 1</a></td>
-            <td>Web</td>
-         </tr>
-         <tr>
-            <td><a href="documento2.pdf">Documento 2</a></td>
-            <td>Windows stack</td>
-         </tr>
-        <tr>
-            <td><a href="documento3.pdf">Documento 3</a></td>
-            <td>Linux stack</td>
-         </tr>
-        <tr>
-            <td><a href="documento4.pdf">Documento 4</a></td>
-            <td>Linux Heap</td>
-         </tr>
-         <tr>
-          <td><a href="documento1.pdf">Documento 1</a></td>
-          <td>Web</td>
-       </tr>
-       <tr>
-          <td><a href="documento2.pdf">Documento 2</a></td>
-          <td>Windows stack</td>
-       </tr>
-      <tr>
-          <td><a href="documento3.pdf">Documento 3</a></td>
-          <td>Linux stack</td>
-       </tr>
-      <tr>
-          <td><a href="documento4.pdf">Documento 4</a></td>
-          <td>Linux Heap</td>
-       </tr>
-          <!-- Agrega más filas según sea necesario -->
-       </tbody>
-    </table>
-  </section>
+  <main>
+    <!-- HERO con glitch + fondo original -->
+    <section class="hero-container" aria-label="portada">
+      <div class="environment" aria-hidden="true"></div>
+      <h1 class="hero layers glitch" data-text="H4CK3R"><span>H4CK3R</span></h1>
+      <p class="quote">“We put the time in ...to know [that network] better than the people who designed it and the people who are securing it.” — Rob Joyce, TAO, NSA</p>
+    </section>
 
-  <script>
-    $(document).ready( function () {
-      $('#myTable').DataTable();
+    <!-- Document Category + búsqueda en vivo -->
+    <section aria-label="documentos">
+      <h2 class="section-title">Document Category</h2>
+
+      <div class="searchbar" role="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 4a6 6 0 1 1 0 12A6 6 0 0 1 10 4m0-2a8 8 0 1 0 4.9 14.32l4.39 4.39l1.42-1.42l-4.39-4.39A8 8 0 0 0 10 2"/></svg>
+        <input id="docSearch" type="search" placeholder="Buscar documentos (e.g., linux, heap, android, ios, rce, lpe)..." autocomplete="off" />
+        <span class="count" id="docCount"></span>
+      </div>
+
+      <div class="grid" id="docGrid">
+        <!-- EXISTENTES -->
+        <a class="doc-card" href="documento1.pdf" data-keywords="web app bug bounty xss sqli">
+          <span class="pill"><span class="dot"></span> Documento 1</span>
+          <h3>Web</h3>
+          <p>Notas y técnicas de investigación en aplicaciones web.</p>
+        </a>
+
+        <a class="doc-card" href="documento2.pdf" data-keywords="windows userland stack rop seh">
+          <span class="pill"><span class="dot"></span> Documento 2</span>
+          <h3>Windows stack</h3>
+          <p>Exploit dev en userland/stack para Windows.</p>
+        </a>
+
+        <a class="doc-card" href="documento3.pdf" data-keywords="linux stack canary nx pie rop">
+          <span class="pill"><span class="dot"></span> Documento 3</span>
+          <h3>Linux stack</h3>
+          <p>Stack smashing, mitigaciones y bypass en Linux.</p>
+        </a>
+
+        <a class="doc-card" href="documento4.pdf" data-keywords="linux heap tcache fastbin unlink glibc jemalloc">
+          <span class="pill"><span class="dot"></span> Documento 4</span>
+          <h3>Linux Heap</h3>
+          <p>Heap grooming, tcache/fastbin y técnicas modernas.</p>
+        </a>
+
+        <!-- NUEVAS: ANDROID -->
+        <a class="doc-card" href="android_lpe.pdf" data-keywords="android lpe privilege escalation binder selinux kernel drivers privesc">
+          <span class="pill"><span class="dot"></span> Documento 5</span>
+          <h3>Android LPE</h3>
+          <p>Escalación de privilegios en Android: Binder, SELinux, kernel & drivers.</p>
+        </a>
+
+        <a class="doc-card" href="https://yandex.com/" data-keywords="android rce remote code execution webview media codec bluetooth nfc">
+          <span class="pill"><span class="dot"></span> Documento 6</span>
+          <h3>Android RCE</h3>
+          <p>Ejecución remota: superficies WebView, Media/codec, Bluetooth, NFC.</p>
+        </a>
+
+        <!-- NUEVAS: iOS -->
+        <a class="doc-card" href="ios_lpe.pdf" data-keywords="ios lpe sandbox escape xpc kernel driver privesc amfid jetsam task_for_pid">
+          <span class="pill"><span class="dot"></span> Documento 7</span>
+          <h3>iOS LPE</h3>
+          <p>Escalación local en iOS: XPC, sandbox escape, kernel & AMFID.</p>
+        </a>
+
+        <a class="doc-card" href="ios_rce.pdf" data-keywords="ios rce remote code execution imessage webkit bluetooth baseband">
+          <span class="pill"><span class="dot"></span> Documento 8</span>
+          <h3>iOS RCE</h3>
+          <p>Superficies remotas: iMessage, WebKit, Bluetooth, baseband.</p>
+        </a>
+      </div>
+
+      <div class="no-results" id="noResults">Sin coincidencias. Intenta con otras palabras clave.</div>
+    </section>
+
+    <footer style="text-align:center; color:#8fa4c2; font-size:13px; padding:12px 0 30px;">
+      © 2025 — VR & 3xpl01tin9
+    </footer>
+  </main>
+
+  <!-- Modal de contraseña -->
+  <div class="modal-backdrop" id="pwModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+      <h3 id="pwTitle">Type password to access</h3>
+      <p id="pwDocLabel">Este documento está protegido.</p>
+      <div class="field">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 17a2 2 0 1 0 0-4a2 2 0 0 0 0 4m6-6h-1V9a5 5 0 1 0-10 0v2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2m-3 0H9V9a3 3 0 1 1 6 0z"/></svg>
+        <input id="pwInput" type="password" placeholder="••••••••••" aria-label="Password" />
+      </div>
+      <div class="hint">Pista: empieza con <code>.</code> y una E mayúscula.</div>
+      <div class="actions">
+        <button class="btn" id="pwCancel">Cancelar</button>
+        <button class="btn primary" id="pwSubmit">Acceder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Access denied</div>
+
+<script>
+/* ===== Búsqueda en vivo ===== */
+(function(){
+  const input  = document.getElementById('docSearch');
+  const grid   = document.getElementById('docGrid');
+  const cards  = Array.from(grid.querySelectorAll('.doc-card'));
+  const badge  = document.getElementById('docCount');
+  const empty  = document.getElementById('noResults');
+
+  function updateCount(visible){
+    badge.textContent = visible === cards.length ? `${cards.length} documentos` : `${visible}/${cards.length}`;
+  }
+  function filter(){
+    const q = (input.value || '').trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(card=>{
+      const haystack = (card.dataset.keywords || '') + ' ' + card.textContent.toLowerCase();
+      const hit = q === '' || haystack.includes(q);
+      card.style.display = hit ? '' : 'none';
+      if (hit) visible++;
     });
-  </script>
-  
+    empty.style.display = visible ? 'none' : 'block';
+    updateCount(visible);
+  }
+  input.addEventListener('input', filter);
+  input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ const first = cards.find(c => c.style.display !== 'none'); if(first){ first.focus(); } }});
+  cards.forEach(c => c.setAttribute('tabindex','0'));
+  filter();
+})();
+
+/* ===== Modal + protección por contraseña (fix de redirección) ===== */
+(function(){
+  const PW_OK = './Expl01ts';
+  const backdrop = document.getElementById('pwModalBackdrop');
+  const pwInput  = document.getElementById('pwInput');
+  const pwSubmit = document.getElementById('pwSubmit');
+  const pwCancel = document.getElementById('pwCancel');
+  const pwDocLabel = document.getElementById('pwDocLabel');
+  const toast = document.getElementById('toast');
+
+  let pendingHref = null;
+
+  function showToast(msg){
+    toast.textContent = msg || 'Access denied';
+    toast.style.display = 'block';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>{ toast.style.display='none'; }, 2200);
+  }
+
+  function openModal(targetHref, title){
+    pendingHref = targetHref;
+    pwInput.value = '';
+    pwDocLabel.textContent = `Documento: ${title}`;
+    backdrop.style.display = 'flex';
+    requestAnimationFrame(()=> pwInput.focus());
+  }
+
+  // ahora closeModal puede opcionalmente no resetear pendingHref
+  function closeModal(reset=true){
+    if (reset) pendingHref = null;
+    backdrop.style.display = 'none';
+  }
+
+  function submitPw(){
+    const val = pwInput.value;
+    if(val === PW_OK){
+      const url = pendingHref;     // cachear antes de cerrar
+      closeModal(false);           // no limpiar pendingHref aún
+      // Redirige (misma pestaña). Para nueva pestaña: window.open(url,'_blank','noopener');
+      window.location.href = url;
+    } else {
+      showToast('Access denied');
+      const modal = backdrop.querySelector('.modal');
+      modal.animate([
+        { transform: 'translateX(0)' },
+        { transform: 'translateX(-6px)' },
+        { transform: 'translateX(6px)' },
+        { transform: 'translateX(0)' }
+      ], { duration: 180, iterations: 2 });
+      pwInput.focus();
+      pwInput.select();
+    }
+  }
+
+  // Interceptar click en todas las cards
+  document.getElementById('docGrid').addEventListener('click', (e)=>{
+    const card = e.target.closest('.doc-card');
+    if(!card) return;
+    e.preventDefault();
+    const href = card.getAttribute('href');
+    const title = card.querySelector('h3')?.textContent?.trim() || 'Documento';
+    openModal(href, title);
+  });
+
+  // Botones modal
+  pwCancel.addEventListener('click', ()=>closeModal(true));
+  pwSubmit.addEventListener('click', submitPw);
+
+  // Teclas: Enter para acceder, ESC para cerrar
+  pwInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') submitPw();
+    if(e.key === 'Escape') closeModal(true);
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(backdrop.style.display === 'flex' && e.key === 'Escape'){ closeModal(true); }
+  });
+
+  // Cerrar si clic fuera
+  backdrop.addEventListener('click', (e)=>{
+    if(e.target === backdrop){ closeModal(true); }
+  });
+})();
+</script>
 </body>
 </html>
