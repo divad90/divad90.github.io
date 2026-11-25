@@ -48,9 +48,13 @@ section { padding: 20px; }
 }
 main{max-width:1100px; margin:0 auto; padding:0 16px 48px;}
 header .quote, .hero-container + .quote, .hero-container .quote{
-  margin-top:10px; color:#ffffff; font-size:14px; font-weight:600;
-  text-shadow:0 1px 4px rgba(0,0,0,.95), 0 0 12px rgba(0,0,0,.8);
+  margin-top:14px; color:#ffffff !important; -webkit-text-fill-color:#ffffff;
+  font-size:16px; line-height:1.5; font-weight:600;
+  text-shadow:0 2px 6px rgba(0,0,0,1), 0 0 3px rgba(0,0,0,1);
+  background:rgba(0,0,0,.65); border:1px solid rgba(255,255,255,.15);
+  border-radius:12px; padding:12px 18px; display:block; width:fit-content;
   text-align:center; max-width:920px; margin-left:auto; margin-right:auto;
+  position:relative; z-index:3;
 }
 .section-title{font-weight:700; color:#eaf3ff; margin:8px 0 14px; font-size:15px; letter-spacing:.03em;}
 .searchbar{display:flex; align-items:center; gap:10px; margin:10px 0 18px; background:#0e1420; border:1px solid #243145; border-radius:12px; padding:10px 12px;}
